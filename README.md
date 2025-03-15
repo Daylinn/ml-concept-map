@@ -53,7 +53,7 @@ pip install -r requirements.txt
 ```
 
 ## Team
-
+Daylin Hart
 Juston Bryant
 Ashley Archibald
 
