@@ -1,0 +1,484 @@
+CHAPTER 11
+Training Deep Neural Networks
+In Chapter 10 we introduced artificial neural networks and trained our first deep neural networks. But they were shallow nets, with just a few hidden layers. What if you need to tackle a complex problem, such as detecting hundreds of types of objects in high-resolution images? You may need to train a much deeper DNN, perhaps with 10 layers or many more, each containing hundreds of neurons, linked by hundreds of thousands of connections. Training a deep DNN isn’t a walk in the park. Here are some of the problems you could run into:
+•	You may be faced with the tricky vanishing gradients problem or the related exploding gradients problem. This is when the gradients grow smaller and smaller, or larger and larger, when flowing backward through the DNN during training. Both of these problems make lower layers very hard to train.
+•	You might not have enough training data for such a large network, or it might be too costly to label.
+•	Training may be extremely slow.
+•	A model with millions of parameters would severely risk overfitting the training set, especially if there are not enough training instances or if they are too noisy.
+In this chapter we will go through each of these problems and present techniques to solve them. We will start by exploring the vanishing and exploding gradients prob‐ lems and some of their most popular solutions. Next, we will look at transfer learning and unsupervised pretraining, which can help you tackle complex tasks even when you have little labeled data. Then we will discuss various optimizers that can speed up training large models tremendously. Finally, we will go through a few popular regula‐ rization techniques for large neural networks.
+With these tools, you will be able to train very deep nets. Welcome to Deep Learning!
+The Vanishing/Exploding Gradients Problems
+As we discussed in Chapter 10, the backpropagation algorithm works by going from the output layer to the input layer, propagating the error gradient along the way. Once the algorithm has computed the gradient of the cost function with regard to each parameter in the network, it uses these gradients to update each parameter with a Gradient Descent step.
+Unfortunately, gradients often get smaller and smaller as the algorithm progresses down to the lower layers. As a result, the Gradient Descent update leaves the lower layers’ connection weights virtually unchanged, and training never converges to a good solution. We call this the vanishing gradients problem. In some cases, the oppo‐ site can happen: the gradients can grow bigger and bigger until layers get insanely large weight updates and the algorithm diverges. This is the exploding gradients prob‐ lem, which surfaces in recurrent neural networks (see Chapter 15). More generally, deep neural networks suffer from unstable gradients; different layers may learn at widely different speeds.
+This unfortunate behavior was empirically observed long ago, and it was one of the reasons deep neural networks were mostly abandoned in the early 2000s. It wasn’t clear what caused the gradients to be so unstable when training a DNN, but some light was shed in a 2010 paper by Xavier Glorot and Yoshua Bengio.1 The authors found a few suspects, including the combination of the popular logistic sigmoid acti‐ vation function and the weight initialization technique that was most popular at the time (i.e., a normal distribution with a mean of 0 and a standard deviation of 1). In short, they showed that with this activation function and this initialization scheme, the variance of the outputs of each layer is much greater than the variance of its inputs. Going forward in the network, the variance keeps increasing after each layer until the activation function saturates at the top layers. This saturation is actually made worse by the fact that the logistic function has a mean of 0.5, not 0 (the hyper‐ bolic tangent function has a mean of 0 and behaves slightly better than the logistic function in deep networks).
+Looking at the logistic activation function (see Figure 11-1), you can see that when inputs become large (negative or positive), the function saturates at 0 or 1, with a derivative extremely close to 0. Thus, when backpropagation kicks in it has virtually no gradient to propagate back through the network; and what little gradient exists keeps getting diluted as backpropagation progresses down through the top layers, so there is really nothing left for the lower layers.
+1	Xavier Glorot and Yoshua Bengio, “Understanding the Difficulty of Training Deep Feedforward Neural Net‐ works,” Proceedings of the 13th International Conference on Artificial Intelligence and Statistics (2010): 249–256.
+Figure 11-1. Logistic activation function saturation
+Glorot and He Initialization
+In their paper, Glorot and Bengio propose a way to significantly alleviate the unstable gradients problem. They point out that we need the signal to flow properly in both directions: in the forward direction when making predictions, and in the reverse direction when backpropagating gradients. We don’t want the signal to die out, nor do we want it to explode and saturate. For the signal to flow properly, the authors argue that we need the variance of the outputs of each layer to be equal to the var‐ iance of its inputs,2 and we need the gradients to have equal variance before and after flowing through a layer in the reverse direction (please check out the paper if you are interested in the mathematical details). It is actually not possible to guarantee both unless the layer has an equal number of inputs and neurons (these numbers are called the fan-in and fan-out of the layer), but Glorot and Bengio proposed a good compro‐ mise that has proven to work very well in practice: the connection weights of each layer must be initialized randomly as described in Equation 11-1, where fanavg = (fanin
++ fanout)/2. This initialization strategy is called Xavier initialization or Glorot initiali‐ zation, after the paper’s first author.
+2	Here’s an analogy: if you set a microphone amplifier’s knob too close to zero, people won’t hear your voice, but if you set it too close to the max, your voice will be saturated and people won’t understand what you are say‐ ing. Now imagine a chain of such amplifiers: they all need to be set properly in order for your voice to come out loud and clear at the end of the chain. Your voice has to come out of each amplifier at the same amplitude as it came in.
+Equation 11-1. Glorot initialization (when using the logistic activation function)
+Normal distribution with mean 0 and variance σ2 =	1
+fanavg
+Or a uniform distribution between −r and + r, with r =
+If you replace fanavg with fanin in Equation 11-1, you get an initialization strategy that Yann LeCun proposed in the 1990s. He called it LeCun initialization. Genevieve Orr and Klaus-Robert Müller even recommended it in their 1998 book Neural Networks: Tricks of the Trade (Springer). LeCun initialization is equivalent to Glorot initializa‐ tion when fanin = fanout. It took over a decade for researchers to realize how important this trick is. Using Glorot initialization can speed up training considerably, and it is one of the tricks that led to the success of Deep Learning.
+Some papers3 have provided similar strategies for different activation functions. These strategies differ only by the scale of the variance and whether they use fanavg or
+fanin, as shown in Table 11-1 (for the uniform distribution, just compute r = 3σ2). The initialization strategy for the ReLU activation function (and its variants, includ‐ ing the ELU activation described shortly) is sometimes called He initialization, after the paper’s first author. The SELU activation function will be explained later in this chapter. It should be used with LeCun initialization (preferably with a normal distri‐ bution, as we will see).
+Table 11-1. Initialization parameters for each type of activation function
+Glorot	None, tanh, logistic, softmax  1 / fanavg
+He	ReLU and variants	2 / fanin
+LeCun	SELU	1 / fanin
+By default, Keras uses Glorot initialization with a uniform distribution. When creat‐ ing a layer, you can change this to He initialization by setting kernel_initial izer="he_uniform" or kernel_initializer="he_normal" like this:
+keras.layers.Dense(10, activation="relu", kernel_initializer="he_normal")
+If you want He initialization with a uniform distribution but based on fanavg rather than fanin, you can use the VarianceScaling initializer like this:
+3	E.g., Kaiming He et al., “Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification,” Proceedings of the 2015 IEEE International Conference on Computer Vision (2015): 1026–1034.
+he_avg_init = keras.initializers.VarianceScaling(scale=2., mode='fan_avg',
+distribution='uniform') keras.layers.Dense(10, activation="sigmoid", kernel_initializer=he_avg_init)
+Nonsaturating Activation Functions
+One of the insights in the 2010 paper by Glorot and Bengio was that the problems with unstable gradients were in part due to a poor choice of activation function. Until then most people had assumed that if Mother Nature had chosen to use roughly sig‐ moid activation functions in biological neurons, they must be an excellent choice. But it turns out that other activation functions behave much better in deep neural net‐ works—in particular, the ReLU activation function, mostly because it does not satu‐ rate for positive values (and because it is fast to compute).
+Unfortunately, the ReLU activation function is not perfect. It suffers from a problem known as the dying ReLUs: during training, some neurons effectively “die,” meaning they stop outputting anything other than 0. In some cases, you may find that half of your network’s neurons are dead, especially if you used a large learning rate. A neu‐ ron dies when its weights get tweaked in such a way that the weighted sum of its inputs are negative for all instances in the training set. When this happens, it just keeps outputting zeros, and Gradient Descent does not affect it anymore because the gradient of the ReLU function is zero when its input is negative.4
+To solve this problem, you may want to use a variant of the ReLU function, such as the leaky ReLU. This function is defined as LeakyReLUα(z) = max(αz, z) (see Figure 11-2). The hyperparameter α defines how much the function “leaks”: it is the slope of the function for z < 0 and is typically set to 0.01. This small slope ensures that leaky ReLUs never die; they can go into a long coma, but they have a chance to even‐ tually wake up. A 2015 paper5 compared several variants of the ReLU activation func‐ tion, and one of its conclusions was that the leaky variants always outperformed the strict ReLU activation function. In fact, setting α = 0.2 (a huge leak) seemed to result in better performance than α = 0.01 (a small leak). The paper also evaluated the randomized leaky ReLU (RReLU), where α is picked randomly in a given range during training and is fixed to an average value during testing. RReLU also performed fairly well and seemed to act as a regularizer (reducing the risk of overfitting the training set). Finally, the paper evaluated the parametric leaky ReLU (PReLU), where α is authorized to be learned during training (instead of being a hyperparameter, it becomes a parameter that can be modified by backpropagation like any other param‐
+4	Unless it is part of the first hidden layer, a dead neuron may sometimes come back to life: Gradient Descent may indeed tweak neurons in the layers below in such a way that the weighted sum of the dead neuron’s inputs is positive again.
+5	Bing Xu et al., “Empirical Evaluation of Rectified Activations in Convolutional Network,” arXiv preprint arXiv:1505.00853 (2015).
+eter). PReLU was reported to strongly outperform ReLU on large image datasets, but on smaller datasets it runs the risk of overfitting the training set.
+Figure 11-2. Leaky ReLU: like ReLU, but with a small slope for negative values
+Last but not least, a 2015 paper by Djork-Arné Clevert et al.6 proposed a new activa‐ tion function called the exponential linear unit (ELU) that outperformed all the ReLU variants in the authors’ experiments: training time was reduced, and the neural net‐ work performed better on the test set. Figure 11-3 graphs the function, and Equation 11-2 shows its definition.
+Equation 11-2. ELU activation function
+ELUα  z  =
+α  exp  z  − 1  if z < 0
+z	if z ≥ 0
+Figure 11-3. ELU activation function
+6	Djork-Arné Clevert et al., “Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs),”
+Proceedings of the International Conference on Learning Representations (2016).
+The ELU activation function looks a lot like the ReLU function, with a few major differences:
+•	It takes on negative values when z < 0, which allows the unit to have an average output closer to 0 and helps alleviate the vanishing gradients problem. The hyperparameter α defines the value that the ELU function approaches when z is a large negative number. It is usually set to 1, but you can tweak it like any other hyperparameter.
+•	It has a nonzero gradient for z < 0, which avoids the dead neurons problem.
+•	If α is equal to 1 then the function is smooth everywhere, including around z = 0, which helps speed up Gradient Descent since it does not bounce as much to the left and right of z = 0.
+The main drawback of the ELU activation function is that it is slower to compute than the ReLU function and its variants (due to the use of the exponential function). Its faster convergence rate during training compensates for that slow computation, but still, at test time an ELU network will be slower than a ReLU network.
+Then, a 2017 paper7 by Günter Klambauer et al. introduced the Scaled ELU (SELU) activation function: as its name suggests, it is a scaled variant of the ELU activation function. The authors showed that if you build a neural network composed exclu‐ sively of a stack of dense layers, and if all hidden layers use the SELU activation func‐ tion, then the network will self-normalize: the output of each layer will tend to preserve a mean of 0 and standard deviation of 1 during training, which solves the vanishing/exploding gradients problem. As a result, the SELU activation function often significantly outperforms other activation functions for such neural nets (espe‐ cially deep ones). There are, however, a few conditions for self-normalization to hap‐ pen (see the paper for the mathematical justification):
+•	The input features must be standardized (mean 0 and standard deviation 1).
+•	Every hidden layer’s weights must be initialized with LeCun normal initialization. In Keras, this means setting kernel_initializer="lecun_normal".
+•	The network’s architecture must be sequential. Unfortunately, if you try to use SELU in nonsequential architectures, such as recurrent networks (see Chap‐ ter 15) or networks with skip connections (i.e., connections that skip layers, such as in Wide & Deep nets), self-normalization will not be guaranteed, so SELU will not necessarily outperform other activation functions.
+7	Günter Klambauer et al., “Self-Normalizing Neural Networks,” Proceedings of the 31st International Conference on Neural Information Processing Systems (2017): 972–981.
+•	The paper only guarantees self-normalization if all layers are dense, but some researchers have noted that the SELU activation function can improve perfor‐ mance in convolutional neural nets as well (see Chapter 14).
+So, which activation function should you use for the hidden layers of your deep neural networks? Although your mileage will vary, in general SELU > ELU > leaky ReLU (and its variants) > ReLU > tanh
+> logistic. If the network’s architecture prevents it from selfnormalizing, then ELU may perform better than SELU (since SELU is not smooth at z = 0). If you care a lot about runtime latency, then you may prefer leaky ReLU. If you don’t want to tweak yet another hyperparameter, you may use the default α values used by Keras (e.g., 0.3 for leaky ReLU). If you have spare time and computing power, you can use cross-validation to evaluate other activation functions, such as RReLU if your network is overfitting or PReLU if you have a huge training set. That said, because ReLU is the most used activation function (by far), many libraries and hardware accelerators provide ReLU-specific optimizations; therefore, if speed is your priority, ReLU might still be the best choice.
+To use the leaky ReLU activation function, create a LeakyReLU layer and add it to your model just after the layer you want to apply it to:
+model = keras.models.Sequential([ [...]
+keras.layers.Dense(10, kernel_initializer="he_normal"), keras.layers.LeakyReLU(alpha=0.2),
+[...]
+])
+For PReLU, replace LeakyReLU(alpha=0.2) with PReLU(). There is currently no offi‐ cial implementation of RReLU in Keras, but you can fairly easily implement your own (to learn how to do that, see the exercises at the end of Chapter 12).
+For SELU activation, set activation="selu" and kernel_initializer="lecun_nor mal" when creating a layer:
+layer = keras.layers.Dense(10, activation="selu",
+kernel_initializer="lecun_normal")
+Batch Normalization
+Although using He initialization along with ELU (or any variant of ReLU) can signifi‐ cantly reduce the danger of the vanishing/exploding gradients problems at the begin‐ ning of training, it doesn’t guarantee that they won’t come back during training.
+In a 2015 paper,8 Sergey Ioffe and Christian Szegedy proposed a technique called Batch Normalization (BN) that addresses these problems. The technique consists of adding an operation in the model just before or after the activation function of each hidden layer. This operation simply zero-centers and normalizes each input, then scales and shifts the result using two new parameter vectors per layer: one for scaling, the other for shifting. In other words, the operation lets the model learn the optimal scale and mean of each of the layer’s inputs. In many cases, if you add a BN layer as the very first layer of your neural network, you do not need to standardize your train‐ ing set (e.g., using a StandardScaler); the BN layer will do it for you (well, approxi‐ mately, since it only looks at one batch at a time, and it can also rescale and shift each input feature).
+In order to zero-center and normalize the inputs, the algorithm needs to estimate each input’s mean and standard deviation. It does so by evaluating the mean and stan‐ dard deviation of the input over the current mini-batch (hence the name “Batch Nor‐ malization”). The whole operation is summarized step by step in Equation 11-3.
+Equation 11-3. Batch Normalization algorithm
+m
+1.	μB = mB i ∑= 1 x 
+2.	σ 2
+3.	x i
+m
+= mB i ∑= 1  x
+x i − μ
+=
+− μB 2
+4.	z i = γ ⊗ x i + β
+In this algorithm:
+•	μB is the vector of input means, evaluated over the whole mini-batch B (it con‐ tains one mean per input).
+•	σB is the vector of input standard deviations, also evaluated over the whole minibatch (it contains one standard deviation per input).
+•	mB is the number of instances in the mini-batch.
+•	x(i) is the vector of zero-centered and normalized inputs for instance i.
+8	Sergey Ioffe and Christian Szegedy, “Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift,” Proceedings of the 32nd International Conference on Machine Learning (2015): 448– 456.
+•	γ is the output scale parameter vector for the layer (it contains one scale parame‐ ter per input).
+•	⊗ represents element-wise multiplication (each input is multiplied by its corre‐ sponding output scale parameter).
+•	β is the output shift (offset) parameter vector for the layer (it contains one offset parameter per input). Each input is offset by its corresponding shift parameter.
+•	ε is a tiny number that avoids division by zero (typically 10–5). This is called a
+smoothing term.
+•	z(i) is the output of the BN operation. It is a rescaled and shifted version of the inputs.
+So during training, BN standardizes its inputs, then rescales and offsets them. Good! What about at test time? Well, it’s not that simple. Indeed, we may need to make pre‐ dictions for individual instances rather than for batches of instances: in this case, we will have no way to compute each input’s mean and standard deviation. Moreover, even if we do have a batch of instances, it may be too small, or the instances may not be independent and identically distributed, so computing statistics over the batch instances would be unreliable. One solution could be to wait until the end of training, then run the whole training set through the neural network and compute the mean and standard deviation of each input of the BN layer. These “final” input means and standard deviations could then be used instead of the batch input means and stan‐ dard deviations when making predictions. However, most implementations of Batch Normalization estimate these final statistics during training by using a moving aver‐ age of the layer’s input means and standard deviations. This is what Keras does auto‐ matically when you use the BatchNormalization layer. To sum up, four parameter vectors are learned in each batch-normalized layer: γ (the output scale vector) and β (the output offset vector) are learned through regular backpropagation, and μ (the final input mean vector) and σ (the final input standard deviation vector) are estima‐ ted using an exponential moving average. Note that μ and σ are estimated during training, but they are used only after training (to replace the batch input means and standard deviations in Equation 11-3).
+Ioffe and Szegedy demonstrated that Batch Normalization considerably improved all the deep neural networks they experimented with, leading to a huge improvement in the ImageNet classification task (ImageNet is a large database of images classified into many classes, commonly used to evaluate computer vision systems). The vanishing gradients problem was strongly reduced, to the point that they could use saturating activation functions such as the tanh and even the logistic activation function. The networks were also much less sensitive to the weight initialization. The authors were able to use much larger learning rates, significantly speeding up the learning process. Specifically, they note that:
+Applied to a state-of-the-art image classification model, Batch Normalization achieves the same accuracy with 14 times fewer training steps, and beats the original model by a significant margin. […] Using an ensemble of batch-normalized networks, we improve upon the best published result on ImageNet classification: reaching 4.9% top-5 valida‐ tion error (and 4.8% test error), exceeding the accuracy of human raters.
+Finally, like a gift that keeps on giving, Batch Normalization acts like a regularizer, reducing the need for other regularization techniques (such as dropout, described later in this chapter).
+Batch Normalization does, however, add some complexity to the model (although it can remove the need for normalizing the input data, as we discussed earlier). More‐ over, there is a runtime penalty: the neural network makes slower predictions due to the extra computations required at each layer. Fortunately, it’s often possible to fuse the BN layer with the previous layer, after training, thereby avoiding the runtime pen‐ alty. This is done by updating the previous layer’s weights and biases so that it directly produces outputs of the appropriate scale and offset. For example, if the previous layer computes XW + b, then the BN layer will compute γ⊗(XW + b – μ)/σ + β (ignoring the smoothing term ε in the denominator). If we define W′ = γ⊗W/σ and b
+′ = γ⊗(b – μ)/σ + β, the equation simplifies to XW′ + b′. So if we replace the previous layer’s weights and biases (W and b) with the updated weights and biases (W′ and b′), we can get rid of the BN layer (TFLite’s converter does this automatically; see Chap‐ ter 19).
+You may find that training is rather slow, because each epoch takes much more time when you use Batch Normalization. This is usu‐ ally counterbalanced by the fact that convergence is much faster with BN, so it will take fewer epochs to reach the same perfor‐ mance. All in all, wall time will usually be shorter (this is the time measured by the clock on your wall).
+Implementing Batch Normalization with Keras
+As with most things with Keras, implementing Batch Normalization is simple and intuitive. Just add a BatchNormalization layer before or after each hidden layer’s activation function, and optionally add a BN layer as well as the first layer in your model. For example, this model applies BN after every hidden layer and as the first layer in the model (after flattening the input images):
+model = keras.models.Sequential([ keras.layers.Flatten(input_shape=[28, 28]), keras.layers.BatchNormalization(),
+keras.layers.Dense(300, activation="elu", kernel_initializer="he_normal"), keras.layers.BatchNormalization(),
+keras.layers.Dense(100, activation="elu", kernel_initializer="he_normal"), keras.layers.BatchNormalization(),
+keras.layers.Dense(10, activation="softmax")
+])
+That’s all! In this tiny example with just two hidden layers, it’s unlikely that Batch Normalization will have a very positive impact; but for deeper networks it can make a tremendous difference.
+Let’s display the model summary:
+>>> model.summary() Model: "sequential_3"
+Layer (type)	Output Shape	Param #
+=================================================================
+flatten_3 (Flatten)	(None, 784)	0
+batch_normalization_v2 (Batc (None, 784)	3136
+dense_50 (Dense)	(None, 300)	235500
+batch_normalization_v2_1 (Ba (None, 300)	1200
+dense_51 (Dense)	(None, 100)	30100
+batch_normalization_v2_2 (Ba (None, 100)	400
+dense_52 (Dense)	(None, 10)	1010
+=================================================================
+Total params: 271,346
+Trainable params: 268,978
+Non-trainable params: 2,368
+As you can see, each BN layer adds four parameters per input: γ, β, μ, and σ (for example, the first BN layer adds 3,136 parameters, which is 4 × 784). The last two parameters, μ and σ, are the moving averages; they are not affected by backpropaga‐ tion, so Keras calls them “non-trainable”9 (if you count the total number of BN parameters, 3,136 + 1,200 + 400, and divide by 2, you get 2,368, which is the total number of non-trainable parameters in this model).
+9	However, they are estimated during training, based on the training data, so arguably they are trainable. In Keras, “non-trainable” really means “untouched by backpropagation.”
+Let’s look at the parameters of the first BN layer. Two are trainable (by backpropaga‐ tion), and two are not:
+>>> [(var.name, var.trainable) for var in model.layers[1].variables] [('batch_normalization_v2/gamma:0', True), ('batch_normalization_v2/beta:0', True), ('batch_normalization_v2/moving_mean:0', False), ('batch_normalization_v2/moving_variance:0', False)]
+Now when you create a BN layer in Keras, it also creates two operations that will be called by Keras at each iteration during training. These operations will update the moving averages. Since we are using the TensorFlow backend, these operations are TensorFlow operations (we will discuss TF operations in Chapter 12):
+>>> model.layers[1].updates
+[<tf.Operation 'cond_2/Identity' type=Identity>,
+<tf.Operation 'cond_3/Identity' type=Identity>]
+The authors of the BN paper argued in favor of adding the BN layers before the acti‐ vation functions, rather than after (as we just did). There is some debate about this, as which is preferable seems to depend on the task—you can experiment with this too to see which option works best on your dataset. To add the BN layers before the activa‐ tion functions, you must remove the activation function from the hidden layers and add them as separate layers after the BN layers. Moreover, since a Batch Normaliza‐ tion layer includes one offset parameter per input, you can remove the bias term from the previous layer (just pass use_bias=False when creating it):
+model = keras.models.Sequential([ keras.layers.Flatten(input_shape=[28, 28]), keras.layers.BatchNormalization(),
+keras.layers.Dense(300, kernel_initializer="he_normal", use_bias=False), keras.layers.BatchNormalization(),
+keras.layers.Activation("elu"),
+keras.layers.Dense(100, kernel_initializer="he_normal", use_bias=False), keras.layers.BatchNormalization(),
+keras.layers.Activation("elu"), keras.layers.Dense(10, activation="softmax")
+])
+The BatchNormalization class has quite a few hyperparameters you can tweak. The defaults will usually be fine, but you may occasionally need to tweak the momentum. This hyperparameter is used by the BatchNormalization layer when it updates the exponential moving averages; given a new value v (i.e., a new vector of input means or standard deviations computed over the current batch), the layer updates the run‐ ning average v using the following equation:
+× momentum + v ×  1 − momentum 
+A good momentum value is typically close to 1; for example, 0.9, 0.99, or 0.999 (you want more 9s for larger datasets and smaller mini-batches).
+Another important hyperparameter is axis: it determines which axis should be nor‐ malized. It defaults to –1, meaning that by default it will normalize the last axis (using the means and standard deviations computed across the other axes). When the input batch is 2D (i.e., the batch shape is [batch size, features]), this means that each input feature will be normalized based on the mean and standard deviation computed across all the instances in the batch. For example, the first BN layer in the previous code example will independently normalize (and rescale and shift) each of the 784 input features. If we move the first BN layer before the Flatten layer, then the input batches will be 3D, with shape [batch size, height, width]; therefore, the BN layer will compute 28 means and 28 standard deviations (1 per column of pixels, computed across all instances in the batch and across all rows in the column), and it will nor‐ malize all pixels in a given column using the same mean and standard deviation. There will also be just 28 scale parameters and 28 shift parameters. If instead you still want to treat each of the 784 pixels independently, then you should set axis=[1, 2].
+Notice that the BN layer does not perform the same computation during training and after training: it uses batch statistics during training and the “final” statistics after training (i.e., the final values of the moving averages). Let’s take a peek at the source code of this class to see how this is handled:
+class BatchNormalization(keras.layers.Layer): [...]
+def call(self, inputs, training=None): [...]
+The call() method is the one that performs the computations; as you can see, it has an extra training argument, which is set to None by default, but the fit() method sets to it to 1 during training. If you ever need to write a custom layer, and it must behave differently during training and testing, add a training argument to the call() method and use this argument in the method to decide what to compute10 (we will discuss custom layers in Chapter 12).
+BatchNormalization has become one of the most-used layers in deep neural net‐ works, to the point that it is often omitted in the diagrams, as it is assumed that BN is added after every layer. But a recent paper11 by Hongyi Zhang et al. may change this assumption: by using a novel fixed-update (fixup) weight initialization technique, the authors managed to train a very deep neural network (10,000 layers!) without BN,
+10	The Keras API also specifies a keras.backend.learning_phase() function that should return 1 during train‐ ing and 0 otherwise.
+11	Hongyi Zhang et al., “Fixup Initialization: Residual Learning Without Normalization,” arXiv preprint arXiv: 1901.09321 (2019).
+achieving state-of-the-art performance on complex image classification tasks. As this is bleeding-edge research, however, you may want to wait for additional research to confirm this finding before you drop Batch Normalization.
+Gradient Clipping
+Another popular technique to mitigate the exploding gradients problem is to clip the gradients during backpropagation so that they never exceed some threshold. This is called Gradient Clipping.12 This technique is most often used in recurrent neural net‐ works, as Batch Normalization is tricky to use in RNNs, as we will see in Chapter 15. For other types of networks, BN is usually sufficient.
+In Keras, implementing Gradient Clipping is just a matter of setting the clipvalue or
+clipnorm argument when creating an optimizer, like this:
+optimizer = keras.optimizers.SGD(clipvalue=1.0) model.compile(loss="mse", optimizer=optimizer)
+This optimizer will clip every component of the gradient vector to a value between –1.0 and 1.0. This means that all the partial derivatives of the loss (with regard to each and every trainable parameter) will be clipped between –1.0 and 1.0. The threshold is a hyperparameter you can tune. Note that it may change the orientation of the gradi‐ ent vector. For instance, if the original gradient vector is [0.9, 100.0], it points mostly in the direction of the second axis; but once you clip it by value, you get [0.9, 1.0], which points roughly in the diagonal between the two axes. In practice, this approach works well. If you want to ensure that Gradient Clipping does not change the direc‐ tion of the gradient vector, you should clip by norm by setting clipnorm instead of clipvalue. This will clip the whole gradient if its ℓ2 norm is greater than the thres‐ hold you picked. For example, if you set clipnorm=1.0, then the vector [0.9, 100.0] will be clipped to [0.00899964, 0.9999595], preserving its orientation but almost elim‐ inating the first component. If you observe that the gradients explode during training (you can track the size of the gradients using TensorBoard), you may want to try both clipping by value and clipping by norm, with different thresholds, and see which option performs best on the validation set.
+Reusing Pretrained Layers
+It is generally not a good idea to train a very large DNN from scratch: instead, you should always try to find an existing neural network that accomplishes a similar task to the one you are trying to tackle (we will discuss how to find them in Chapter 14), then reuse the lower layers of this network. This technique is called transfer learning.
+12	Razvan Pascanu et al., “On the Difficulty of Training Recurrent Neural Networks,” Proceedings of the 30th International Conference on Machine Learning (2013): 1310–1318.
+It will not only speed up training considerably, but also require significantly less training data.
+Suppose you have access to a DNN that was trained to classify pictures into 100 dif‐ ferent categories, including animals, plants, vehicles, and everyday objects. You now want to train a DNN to classify specific types of vehicles. These tasks are very similar, even partly overlapping, so you should try to reuse parts of the first network (see Figure 11-4).
+Figure 11-4. Reusing pretrained layers
+If the input pictures of your new task don’t have the same size as the ones used in the original task, you will usually have to add a preprocessing step to resize them to the size expected by the origi‐ nal model. More generally, transfer learning will work best when the inputs have similar low-level features.
+The output layer of the original model should usually be replaced because it is most likely not useful at all for the new task, and it may not even have the right number of outputs for the new task.
+Similarly, the upper hidden layers of the original model are less likely to be as useful as the lower layers, since the high-level features that are most useful for the new task may differ significantly from the ones that were most useful for the original task. You want to find the right number of layers to reuse.
+The more similar the tasks are, the more layers you want to reuse (starting with the lower layers). For very similar tasks, try keeping all the hidden layers and just replacing the output layer.
+Try freezing all the reused layers first (i.e., make their weights non-trainable so that Gradient Descent won’t modify them), then train your model and see how it per‐ forms. Then try unfreezing one or two of the top hidden layers to let backpropaga‐ tion tweak them and see if performance improves. The more training data you have, the more layers you can unfreeze. It is also useful to reduce the learning rate when you unfreeze reused layers: this will avoid wrecking their fine-tuned weights.
+If you still cannot get good performance, and you have little training data, try drop‐ ping the top hidden layer(s) and freezing all the remaining hidden layers again. You can iterate until you find the right number of layers to reuse. If you have plenty of training data, you may try replacing the top hidden layers instead of dropping them, and even adding more hidden layers.
+Transfer Learning with Keras
+Let’s look at an example. Suppose the Fashion MNIST dataset only contained eight classes—for example, all the classes except for sandal and shirt. Someone built and trained a Keras model on that set and got reasonably good performance (>90% accu‐ racy). Let’s call this model A. You now want to tackle a different task: you have images of sandals and shirts, and you want to train a binary classifier (positive=shirt, negative=sandal). Your dataset is quite small; you only have 200 labeled images. When you train a new model for this task (let’s call it model B) with the same archi‐ tecture as model A, it performs reasonably well (97.2% accuracy). But since it’s a much easier task (there are just two classes), you were hoping for more. While drink‐ ing your morning coffee, you realize that your task is quite similar to task A, so per‐ haps transfer learning can help? Let’s find out!
+First, you need to load model A and create a new model based on that model’s layers. Let’s reuse all the layers except for the output layer:
+model_A = keras.models.load_model("my_model_A.h5") model_B_on_A = keras.models.Sequential(model_A.layers[:-1]) model_B_on_A.add(keras.layers.Dense(1, activation="sigmoid"))
+Note that model_A and model_B_on_A now share some layers. When you train model_B_on_A, it will also affect model_A. If you want to avoid that, you need to clone model_A before you reuse its layers. To do this, you clone model A’s architecture with clone_model(), then copy its weights (since clone_model() does not clone the weights):
+model_A_clone = keras.models.clone_model(model_A) model_A_clone.set_weights(model_A.get_weights())
+Now you could train model_B_on_A for task B, but since the new output layer was ini‐ tialized randomly it will make large errors (at least during the first few epochs), so there will be large error gradients that may wreck the reused weights. To avoid this, one approach is to freeze the reused layers during the first few epochs, giving the new layer some time to learn reasonable weights. To do this, set every layer’s trainable attribute to False and compile the model:
+for layer in model_B_on_A.layers[:-1]: layer.trainable = False
+model_B_on_A.compile(loss="binary_crossentropy", optimizer="sgd", metrics=["accuracy"])
+You must always compile your model after you freeze or unfreeze layers.
+Now you can train the model for a few epochs, then unfreeze the reused layers (which requires compiling the model again) and continue training to fine-tune the reused layers for task B. After unfreezing the reused layers, it is usually a good idea to reduce the learning rate, once again to avoid damaging the reused weights:
+history = model_B_on_A.fit(X_train_B, y_train_B, epochs=4,
+validation_data=(X_valid_B, y_valid_B))
+for layer in model_B_on_A.layers[:-1]: layer.trainable = True
+optimizer = keras.optimizers.SGD(lr=1e-4) # the default lr is 1e-2
+model_B_on_A.compile(loss="binary_crossentropy", optimizer=optimizer,
+metrics=["accuracy"])
+history = model_B_on_A.fit(X_train_B, y_train_B, epochs=16,
+validation_data=(X_valid_B, y_valid_B))
+So, what’s the final verdict? Well, this model’s test accuracy is 99.25%, which means that transfer learning reduced the error rate from 2.8% down to almost 0.7%! That’s a factor of four!
+>>> model_B_on_A.evaluate(X_test_B, y_test_B) [0.06887910133600235, 0.9925]
+Are you convinced? You shouldn’t be: I cheated! I tried many configurations until I found one that demonstrated a strong improvement. If you try to change the classes or the random seed, you will see that the improvement generally drops, or even van‐ ishes or reverses. What I did is called “torturing the data until it confesses.” When a
+paper just looks too positive, you should be suspicious: perhaps the flashy new tech‐ nique does not actually help much (in fact, it may even degrade performance), but the authors tried many variants and reported only the best results (which may be due to sheer luck), without mentioning how many failures they encountered on the way. Most of the time, this is not malicious at all, but it is part of the reason so many results in science can never be reproduced.
+Why did I cheat? It turns out that transfer learning does not work very well with small dense networks, presumably because small networks learn few patterns, and dense networks learn very specific patterns, which are unlikely to be useful in other tasks. Transfer learning works best with deep convolutional neural networks, which tend to learn feature detectors that are much more general (especially in the lower layers). We will revisit transfer learning in Chapter 14, using the techniques we just discussed (and this time there will be no cheating, I promise!).
+Unsupervised Pretraining
+Suppose you want to tackle a complex task for which you don’t have much labeled training data, but unfortunately you cannot find a model trained on a similar task. Don’t lose hope! First, you should try to gather more labeled training data, but if you can’t, you may still be able to perform unsupervised pretraining (see Figure 11-5). Indeed, it is often cheap to gather unlabeled training examples, but expensive to label them. If you can gather plenty of unlabeled training data, you can try to use it to train an unsupervised model, such as an autoencoder or a generative adversarial network (see Chapter 17). Then you can reuse the lower layers of the autoencoder or the lower layers of the GAN’s discriminator, add the output layer for your task on top, and finetune the final network using supervised learning (i.e., with the labeled training examples).
+It is this technique that Geoffrey Hinton and his team used in 2006 and which led to the revival of neural networks and the success of Deep Learning. Until 2010, unsuper‐ vised pretraining—typically with restricted Boltzmann machines (RBMs; see Appen‐ dix E)—was the norm for deep nets, and only after the vanishing gradients problem was alleviated did it become much more common to train DNNs purely using super‐ vised learning. Unsupervised pretraining (today typically using autoencoders or GANs rather than RBMs) is still a good option when you have a complex task to solve, no similar model you can reuse, and little labeled training data but plenty of unlabeled training data.
+Note that in the early days of Deep Learning it was difficult to train deep models, so people would use a technique called greedy layer-wise pretraining (depicted in Figure 11-5). They would first train an unsupervised model with a single layer, typi‐ cally an RBM, then they would freeze that layer and add another one on top of it, then train the model again (effectively just training the new layer), then freeze the
+new layer and add another layer on top of it, train the model again, and so on. Nowa‐ days, things are much simpler: people generally train the full unsupervised model in one shot (i.e., in Figure 11-5, just start directly at step three) and use autoencoders or GANs rather than RBMs.
+Figure 11-5. In unsupervised training, a model is trained on the unlabeled data (or on all the data) using an unsupervised learning technique, then it is fine-tuned for the final task on the labeled data using a supervised learning technique; the unsupervised part may train one layer at a time as shown here, or it may train the full model directly
+Pretraining on an Auxiliary Task
+If you do not have much labeled training data, one last option is to train a first neural network on an auxiliary task for which you can easily obtain or generate labeled training data, then reuse the lower layers of that network for your actual task. The first neural network’s lower layers will learn feature detectors that will likely be reusa‐ ble by the second neural network.
+For example, if you want to build a system to recognize faces, you may only have a few pictures of each individual—clearly not enough to train a good classifier. Gather‐ ing hundreds of pictures of each person would not be practical. You could, however, gather a lot of pictures of random people on the web and train a first neural network to detect whether or not two different pictures feature the same person. Such a
+network would learn good feature detectors for faces, so reusing its lower layers would allow you to train a good face classifier that uses little training data.
+For natural language processing (NLP) applications, you can download a corpus of millions of text documents and automatically generate labeled data from it. For exam‐ ple, you could randomly mask out some words and train a model to predict what the missing words are (e.g., it should predict that the missing word in the sentence “What
+  you saying?” is probably “are” or “were”). If you can train a model to reach good performance on this task, then it will already know quite a lot about language, and you can certainly reuse it for your actual task and fine-tune it on your labeled data (we will discuss more pretraining tasks in Chapter 15).
+Self-supervised learning is when you automatically generate the labels from the data itself, then you train a model on the resulting “labeled” dataset using supervised learning techniques. Since this approach requires no human labeling whatsoever, it is best classi‐ fied as a form of unsupervised learning.
+Faster Optimizers
+Training a very large deep neural network can be painfully slow. So far we have seen four ways to speed up training (and reach a better solution): applying a good initiali‐ zation strategy for the connection weights, using a good activation function, using Batch Normalization, and reusing parts of a pretrained network (possibly built on an auxiliary task or using unsupervised learning). Another huge speed boost comes from using a faster optimizer than the regular Gradient Descent optimizer. In this section we will present the most popular algorithms: momentum optimization, Nesterov Accelerated Gradient, AdaGrad, RMSProp, and finally Adam and Nadam optimization.
+Momentum Optimization
+Imagine a bowling ball rolling down a gentle slope on a smooth surface: it will start out slowly, but it will quickly pick up momentum until it eventually reaches terminal velocity (if there is some friction or air resistance). This is the very simple idea behind momentum optimization, proposed by Boris Polyak in 1964.13 In contrast, regular Gradient Descent will simply take small, regular steps down the slope, so the algo‐ rithm will take much more time to reach the bottom.
+13	Boris T. Polyak, “Some Methods of Speeding Up the Convergence of Iteration Methods,” USSR Computational Mathematics and Mathematical Physics 4, no. 5 (1964): 1–17.
+Recall that Gradient Descent updates the weights θ by directly subtracting the gradi‐ ent of the cost function J(θ) with regard to the weights (∇θJ(θ)) multiplied by the learning rate η. The equation is: θ ← θ – η∇θJ(θ). It does not care about what the ear‐ lier gradients were. If the local gradient is tiny, it goes very slowly.
+Momentum optimization cares a great deal about what previous gradients were: at each iteration, it subtracts the local gradient from the momentum vector m (multi‐ plied by the learning rate η), and it updates the weights by adding this momentum vector (see Equation 11-4). In other words, the gradient is used for acceleration, not for speed. To simulate some sort of friction mechanism and prevent the momentum from growing too large, the algorithm introduces a new hyperparameter β, called the momentum, which must be set between 0 (high friction) and 1 (no friction). A typical momentum value is 0.9.
+Equation 11-4. Momentum algorithm
+1.	m   βm − η∇θJ  θ 
+2.	θ   θ + m
+You can easily verify that if the gradient remains constant, the terminal velocity (i.e., the maximum size of the weight updates) is equal to that gradient multiplied by the learning rate η multiplied by 1/(1–β) (ignoring the sign). For example, if β = 0.9, then the terminal velocity is equal to 10 times the gradient times the learning rate, so momentum optimization ends up going 10 times faster than Gradient Descent! This allows momentum optimization to escape from plateaus much faster than Gradient Descent. We saw in Chapter 4 that when the inputs have very different scales, the cost function will look like an elongated bowl (see Figure 4-7). Gradient Descent goes down the steep slope quite fast, but then it takes a very long time to go down the val‐ ley. In contrast, momentum optimization will roll down the valley faster and faster until it reaches the bottom (the optimum). In deep neural networks that don’t use Batch Normalization, the upper layers will often end up having inputs with very dif‐ ferent scales, so using momentum optimization helps a lot. It can also help roll past local optima.
+Due to the momentum, the optimizer may overshoot a bit, then come back, overshoot again, and oscillate like this many times before stabilizing at the minimum. This is one of the reasons it’s good to have a bit of friction in the system: it gets rid of these oscil‐ lations and thus speeds up convergence.
+Implementing momentum optimization in Keras is a no-brainer: just use the SGD
+optimizer and set its momentum hyperparameter, then lie back and profit!
+optimizer = keras.optimizers.SGD(lr=0.001, momentum=0.9)
+The one drawback of momentum optimization is that it adds yet another hyperpara‐ meter to tune. However, the momentum value of 0.9 usually works well in practice and almost always goes faster than regular Gradient Descent.
+Nesterov Accelerated Gradient
+One small variant to momentum optimization, proposed by Yurii Nesterov in 1983,14 is almost always faster than vanilla momentum optimization. The Nesterov Acceler‐ ated Gradient (NAG) method, also known as Nesterov momentum optimization, meas‐ ures the gradient of the cost function not at the local position θ but slightly ahead in the direction of the momentum, at θ + βm (see Equation 11-5).
+Equation 11-5. Nesterov Accelerated Gradient algorithm
+1.	m   βm − η∇θJ  θ + βm 
+2.	θ   θ + m
+This small tweak works because in general the momentum vector will be pointing in the right direction (i.e., toward the optimum), so it will be slightly more accurate to use the gradient measured a bit farther in that direction rather than the gradient at the original position, as you can see in Figure 11-6 (where ∇1 represents the gradient of the cost function measured at the starting point θ, and ∇2 represents the gradient at the point located at θ + βm).
+As you can see, the Nesterov update ends up slightly closer to the optimum. After a while, these small improvements add up and NAG ends up being significantly faster than regular momentum optimization. Moreover, note that when the momentum pushes the weights across a valley, ∇1 continues to push farther across the valley, while ∇2 pushes back toward the bottom of the valley. This helps reduce oscillations and thus NAG converges faster.
+NAG is generally faster than regular momentum optimization. To use it, simply set
+nesterov=True when creating the SGD optimizer:
+optimizer = keras.optimizers.SGD(lr=0.001, momentum=0.9, nesterov=True)
+14	Yurii Nesterov, “A Method for Unconstrained Convex Minimization Problem with the Rate of Convergence O(1/k2),” Doklady AN USSR 269 (1983): 543–547.
+Figure 11-6. Regular versus Nesterov momentum optimization: the former applies the gradients computed before the momentum step, while the latter applies the gradients computed after
+AdaGrad
+Consider the elongated bowl problem again: Gradient Descent starts by quickly going down the steepest slope, which does not point straight toward the global optimum, then it very slowly goes down to the bottom of the valley. It would be nice if the algo‐ rithm could correct its direction earlier to point a bit more toward the global opti‐ mum. The AdaGrad algorithm15 achieves this correction by scaling down the gradient vector along the steepest dimensions (see Equation 11-6).
+Equation 11-6. AdaGrad algorithm
+1.	s   s + ∇θJ  θ  ⊗ ∇θJ  θ 
+2.	θ   θ − η ∇θJ  θ  ⊘
+The first step accumulates the square of the gradients into the vector s (recall that the
+⊗ symbol represents the element-wise multiplication). This vectorized form is equiv‐ alent to computing si ← si + (∂ J(θ) / ∂ θi)2 for each element si of the vector s; in other words, each si accumulates the squares of the partial derivative of the cost function with regard to parameter θi. If the cost function is steep along the ith dimension, then si will get larger and larger at each iteration.
+The second step is almost identical to Gradient Descent, but with one big difference:
+the gradient vector is scaled down by a factor of	(the ⊘ symbol represents the
+15	John Duchi et al., “Adaptive Subgradient Methods for Online Learning and Stochastic Optimization,” Journal of Machine Learning Research 12 (2011): 2121–2159.
+element-wise division, and ε is a smoothing term to avoid division by zero, typically set to 10–10). This vectorized form is equivalent to simultaneously computing
+θi   θi − η ∂J  θ / ∂θi/	for all parameters θi.
+In short, this algorithm decays the learning rate, but it does so faster for steep dimen‐ sions than for dimensions with gentler slopes. This is called an adaptive learning rate. It helps point the resulting updates more directly toward the global optimum (see Figure 11-7). One additional benefit is that it requires much less tuning of the learn‐ ing rate hyperparameter η.
+Figure 11-7. AdaGrad versus Gradient Descent: the former can correct its direction ear‐ lier to point to the optimum
+AdaGrad frequently performs well for simple quadratic problems, but it often stops too early when training neural networks. The learning rate gets scaled down so much that the algorithm ends up stopping entirely before reaching the global optimum. So even though Keras has an Adagrad optimizer, you should not use it to train deep neu‐ ral networks (it may be efficient for simpler tasks such as Linear Regression, though). Still, understanding AdaGrad is helpful to grasp the other adaptive learning rate optimizers.
+RMSProp
+As we’ve seen, AdaGrad runs the risk of slowing down a bit too fast and never con‐ verging to the global optimum. The RMSProp algorithm16 fixes this by accumulating only the gradients from the most recent iterations (as opposed to all the gradients
+16	This algorithm was created by Geoffrey Hinton and Tijmen Tieleman in 2012 and presented by Geoffrey Hin‐ ton in his Coursera class on neural networks (slides: https://homl.info/57; video: https://homl.info/58). Amus‐ ingly, since the authors did not write a paper to describe the algorithm, researchers often cite “slide 29 in lecture 6” in their papers.
+since the beginning of training). It does so by using exponential decay in the first step (see Equation 11-7).
+Equation 11-7. RMSProp algorithm
+1.	s   βs +  1 − β ∇θJ  θ  ⊗ ∇θJ  θ 
+2.	θ   θ − η ∇θJ  θ  ⊘
+The decay rate β is typically set to 0.9. Yes, it is once again a new hyperparameter, but this default value often works well, so you may not need to tune it at all.
+As you might expect, Keras has an RMSprop optimizer:
+optimizer = keras.optimizers.RMSprop(lr=0.001, rho=0.9)
+Note that the rho argument corresponds to β in Equation 11-7. Except on very simple problems, this optimizer almost always performs much better than AdaGrad. In fact, it was the preferred optimization algorithm of many researchers until Adam optimi‐ zation came around.
+Adam and Nadam Optimization
+Adam,17 which stands for adaptive moment estimation, combines the ideas of momen‐ tum optimization and RMSProp: just like momentum optimization, it keeps track of an exponentially decaying average of past gradients; and just like RMSProp, it keeps track of an exponentially decaying average of past squared gradients (see Equation 11-8).18
+Equation 11-8. Adam algorithm
+1.	m   β1m −  1 − β1 ∇θJ  θ 
+2.	s   β2s +  1 − β2 ∇θJ  θ  ⊗ ∇θJ  θ 
+3.	
+4.	
+1 − β1
+1 − β2
+5.	θ   θ + η m ⊘
+17	Diederik P. Kingma and Jimmy Ba, “Adam: A Method for Stochastic Optimization,” arXiv preprint arXiv: 1412.6980 (2014).
+18	These are estimations of the mean and (uncentered) variance of the gradients. The mean is often called the
+first moment while the variance is often called the second moment, hence the name of the algorithm.
+In this equation, t represents the iteration number (starting at 1).
+If you just look at steps 1, 2, and 5, you will notice Adam’s close similarity to both momentum optimization and RMSProp. The only difference is that step 1 computes an exponentially decaying average rather than an exponentially decaying sum, but these are actually equivalent except for a constant factor (the decaying average is just 1 – β1 times the decaying sum). Steps 3 and 4 are somewhat of a technical detail: since m and s are initialized at 0, they will be biased toward 0 at the beginning of training, so these two steps will help boost m and s at the beginning of training.
+The momentum decay hyperparameter β1 is typically initialized to 0.9, while the scal‐ ing decay hyperparameter β2 is often initialized to 0.999. As earlier, the smoothing term ε is usually initialized to a tiny number such as 10–7. These are the default values for the Adam class (to be precise, epsilon defaults to None, which tells Keras to use keras.backend.epsilon(), which defaults to 10–7; you can change it using keras.backend.set_epsilon()). Here is how to create an Adam optimizer using Keras:
+optimizer = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999)
+Since Adam is an adaptive learning rate algorithm (like AdaGrad and RMSProp), it requires less tuning of the learning rate hyperparameter η. You can often use the default value η = 0.001, making Adam even easier to use than Gradient Descent.
+If you are starting to feel overwhelmed by all these different techni‐ ques and are wondering how to choose the right ones for your task, don’t worry: some practical guidelines are provided at the end of this chapter.
+Finally, two variants of Adam are worth mentioning:
+AdaMax
+Notice that in step 2 of Equation 11-8, Adam accumulates the squares of the gra‐ dients in s (with a greater weight for more recent gradients). In step 5, if we ignore ε and steps 3 and 4 (which are technical details anyway), Adam scales down the parameter updates by the square root of s. In short, Adam scales down the parameter updates by the ℓ2 norm of the time-decayed gradients (recall that the ℓ2 norm is the square root of the sum of squares). AdaMax, introduced in the same paper as Adam, replaces the ℓ2 norm with the ℓ∞ norm (a fancy way of say‐ ing  the  max).  Specifically,  it  replaces  step  2  in  Equation  11-8  with s   max β2s, θ J  θ  , it drops step 4, and in step 5 it scales down the gradient updates by a factor of s, which is just the max of the time-decayed gradients. In practice, this can make AdaMax more stable than Adam, but it really depends on
+the dataset, and in general Adam performs better. So, this is just one more opti‐ mizer you can try if you experience problems with Adam on some task.
+Nadam
+Nadam optimization is Adam optimization plus the Nesterov trick, so it will often converge slightly faster than Adam. In his report introducing this techni‐ que,19 the researcher Timothy Dozat compares many different optimizers on vari‐ ous tasks and finds that Nadam generally outperforms Adam but is sometimes outperformed by RMSProp.
+Adaptive optimization methods (including RMSProp, Adam, and Nadam optimization) are often great, converging fast to a good sol‐ ution. However, a 2017 paper20 by Ashia C. Wilson et al. showed that they can lead to solutions that generalize poorly on some data‐ sets. So when you are disappointed by your model’s performance, try using plain Nesterov Accelerated Gradient instead: your dataset may just be allergic to adaptive gradients. Also check out the latest research, because it’s moving fast.
+All the optimization techniques discussed so far only rely on the first-order partial derivatives (Jacobians). The optimization literature also contains amazing algorithms based on the second-order partial derivatives (the Hessians, which are the partial derivatives of the Jacobians). Unfortunately, these algorithms are very hard to apply to deep neural networks because there are n2 Hessians per output (where n is the number of parameters), as opposed to just n Jacobians per output. Since DNNs typi‐ cally have tens of thousands of parameters, the second-order optimization algorithms often don’t even fit in memory, and even when they do, computing the Hessians is just too slow.
+19	Timothy Dozat, “Incorporating Nesterov Momentum into Adam” (2016).
+20	Ashia C. Wilson et al., “The Marginal Value of Adaptive Gradient Methods in Machine Learning,” Advances in Neural Information Processing Systems 30 (2017): 4148–4158.
+Table 11-2 compares all the optimizers we’ve discussed so far (* is bad, ** is average, and *** is good).
+Table 11-2. Optimizer comparison
+SGD	*	***
+SGD(momentum=...)	**	***
+SGD(momentum=..., nesterov=True) **	***
+Adagrad	***	* (stops too early)
+RMSprop	***	** or ***
+Adam	***	** or ***
+Nadam	***	** or ***
+AdaMax	***	** or ***
+Learning Rate Scheduling
+Finding a good learning rate is very important. If you set it much too high, training may diverge (as we discussed in “Gradient Descent” on page 118). If you set it too low, training will eventually converge to the optimum, but it will take a very long time. If you set it slightly too high, it will make progress very quickly at first, but it will end up dancing around the optimum, never really settling down. If you have a limited computing budget, you may have to interrupt training before it has converged properly, yielding a suboptimal solution (see Figure 11-8).
+Figure 11-8. Learning curves for various learning rates η
+As we discussed in Chapter 10, you can find a good learning rate by training the model for a few hundred iterations, exponentially increasing the learning rate from a very small value to a very large value, and then looking at the learning curve and picking a learning rate slightly lower than the one at which the learning curve starts shooting back up. You can then reinitialize your model and train it with that learning rate.
+But you can do better than a constant learning rate: if you start with a large learning rate and then reduce it once training stops making fast progress, you can reach a good solution faster than with the optimal constant learning rate. There are many dif‐ ferent strategies to reduce the learning rate during training. It can also be beneficial to start with a low learning rate, increase it, then drop it again. These strategies are called learning schedules (we briefly introduced this concept in Chapter 4). These are the most commonly used learning schedules:
+Power scheduling
+Set the learning rate to a function of the iteration number t: η(t) = η0 / (1 + t/s)c. The initial learning rate η0, the power c (typically set to 1), and the steps s are hyperparameters. The learning rate drops at each step. After s steps, it is down to η0 / 2. After s more steps, it is down to η0 / 3, then it goes down to η0 / 4, then η0 / 5, and so on. As you can see, this schedule first drops quickly, then more and more slowly. Of course, power scheduling requires tuning η0 and s (and possibly c).
+Exponential scheduling
+Set the learning rate to η(t) = η0 0.1t/s. The learning rate will gradually drop by a factor of 10 every s steps. While power scheduling reduces the learning rate more and more slowly, exponential scheduling keeps slashing it by a factor of 10 every s steps.
+Piecewise constant scheduling
+Use a constant learning rate for a number of epochs (e.g., η0 = 0.1 for 5 epochs), then a smaller learning rate for another number of epochs (e.g., η1 = 0.001 for 50 epochs), and so on. Although this solution can work very well, it requires fid‐ dling around to figure out the right sequence of learning rates and how long to use each of them.
+Performance scheduling
+Measure the validation error every N steps (just like for early stopping), and reduce the learning rate by a factor of λ when the error stops dropping.
+1cycle scheduling
+Contrary to the other approaches, 1cycle (introduced in a 2018 paper21 by Leslie Smith) starts by increasing the initial learning rate η0, growing linearly up to η1 halfway through training. Then it decreases the learning rate linearly down to η0 again during the second half of training, finishing the last few epochs by drop‐ ping the rate down by several orders of magnitude (still linearly). The maximum learning rate η1 is chosen using the same approach we used to find the optimal learning rate, and the initial learning rate η0 is chosen to be roughly 10 times lower. When using a momentum, we start with a high momentum first (e.g., 0.95), then drop it down to a lower momentum during the first half of training (e.g., down to 0.85, linearly), and then bring it back up to the maximum value (e.g., 0.95) during the second half of training, finishing the last few epochs with that maximum value. Smith did many experiments showing that this approach was often able to speed up training considerably and reach better performance. For example, on the popular CIFAR10 image dataset, this approach reached 91.9% validation accuracy in just 100 epochs, instead of 90.3% accuracy in 800 epochs through a standard approach (with the same neural network architecture).
+A 2013 paper22 by Andrew Senior et al. compared the performance of some of the most popular learning schedules when using momentum optimization to train deep neural networks for speech recognition. The authors concluded that, in this setting, both performance scheduling and exponential scheduling performed well. They favored exponential scheduling because it was easy to tune and it converged slightly faster to the optimal solution (they also mentioned that it was easier to implement
+21	Leslie N. Smith, “A Disciplined Approach to Neural Network Hyper-Parameters: Part 1—Learning Rate, Batch Size, Momentum, and Weight Decay,” arXiv preprint arXiv:1803.09820 (2018).
+22	Andrew Senior et al., “An Empirical Study of Learning Rates in Deep Neural Networks for Speech Recogni‐ tion,” Proceedings of the IEEE International Conference on Acoustics, Speech, and Signal Processing (2013): 6724–6728.
+than performance scheduling, but in Keras both options are easy). That said, the 1cycle approach seems to perform even better.
+Implementing power scheduling in Keras is the easiest option: just set the decay
+hyperparameter when creating an optimizer:
+optimizer = keras.optimizers.SGD(lr=0.01, decay=1e-4)
+The decay is the inverse of s (the number of steps it takes to divide the learning rate by one more unit), and Keras assumes that c is equal to 1.
+Exponential scheduling and piecewise scheduling are quite simple too. You first need to define a function that takes the current epoch and returns the learning rate. For example, let’s implement exponential scheduling:
+def exponential_decay_fn(epoch):
+return 0.01 * 0.1**(epoch / 20)
+If you do not want to hardcode η0 and s, you can create a function that returns a con‐ figured function:
+def exponential_decay(lr0, s):
+def exponential_decay_fn(epoch):
+return lr0 * 0.1**(epoch / s)
+return exponential_decay_fn
+exponential_decay_fn = exponential_decay(lr0=0.01, s=20)
+Next, create a LearningRateScheduler callback, giving it the schedule function, and pass this callback to the fit() method:
+lr_scheduler = keras.callbacks.LearningRateScheduler(exponential_decay_fn) history = model.fit(X_train_scaled, y_train, [...], callbacks=[lr_scheduler])
+The LearningRateScheduler will update the optimizer’s learning_rate attribute at the beginning of each epoch. Updating the learning rate once per epoch is usually enough, but if you want it to be updated more often, for example at every step, you can always write your own callback (see the “Exponential Scheduling” section of the notebook for an example). Updating the learning rate at every step makes sense if there are many steps per epoch. Alternatively, you can use the keras.optimiz ers.schedules approach, described shortly.
+The schedule function can optionally take the current learning rate as a second argu‐ ment. For example, the following schedule function multiplies the previous learning rate by 0.11/20, which results in the same exponential decay (except the decay now starts at the beginning of epoch 0 instead of 1):
+def exponential_decay_fn(epoch, lr):
+return lr * 0.1**(1 / 20)
+This implementation relies on the optimizer’s initial learning rate (contrary to the previous implementation), so make sure to set it appropriately.
+When you save a model, the optimizer and its learning rate get saved along with it. This means that with this new schedule function, you could just load a trained model and continue training where it left off, no problem. Things are not so simple if your schedule function uses the epoch argument, however: the epoch does not get saved, and it gets reset to 0 every time you call the fit() method. If you were to continue training a model where it left off, this could lead to a very large learning rate, which would likely damage your model’s weights. One solution is to manually set the fit() method’s initial_epoch argument so the epoch starts at the right value.
+For piecewise constant scheduling, you can use a schedule function like the following one (as earlier, you can define a more general function if you want; see the “Piecewise Constant Scheduling” section of the notebook for an example), then create a Lear ningRateScheduler callback with this function and pass it to the fit() method, just like we did for exponential scheduling:
+def piecewise_constant_fn(epoch):
+if epoch < 5:
+return 0.01
+elif epoch < 15:
+return 0.005
+else:
+return 0.001
+For performance scheduling, use the ReduceLROnPlateau callback. For example, if you pass the following callback to the fit() method, it will multiply the learning rate by 0.5 whenever the best validation loss does not improve for five consecutive epochs (other options are available; please check the documentation for more details):
+lr_scheduler = keras.callbacks.ReduceLROnPlateau(factor=0.5, patience=5)
+Lastly, tf.keras offers an alternative way to implement learning rate scheduling: define the learning rate using one of the schedules available in keras.optimizers.sched ules, then pass this learning rate to any optimizer. This approach updates the learn‐ ing rate at each step rather than at each epoch. For example, here is how to implement the same exponential schedule as the exponential_decay_fn() function we defined earlier:
+s = 20 * len(X_train) // 32 # number of steps in 20 epochs (batch size = 32) learning_rate = keras.optimizers.schedules.ExponentialDecay(0.01, s, 0.1) optimizer = keras.optimizers.SGD(learning_rate)
+This is nice and simple, plus when you save the model, the learning rate and its schedule (including its state) get saved as well. This approach, however, is not part of the Keras API; it is specific to tf.keras.
+As for the 1cycle approach, the implementation poses no particular difficulty: just create a custom callback that modifies the learning rate at each iteration (you can update the optimizer’s learning rate by changing self.model.optimizer.lr). See the “1Cycle scheduling” section of the notebook for an example.
+To sum up, exponential decay, performance scheduling, and 1cycle can considerably speed up convergence, so give them a try!
+Avoiding Overfitting Through Regularization
+With four parameters I can fit an elephant and with five I can make him wiggle his trunk.
+—John von Neumann, cited by Enrico Fermi in Nature 427
+With thousands of parameters, you can fit the whole zoo. Deep neural networks typi‐ cally have tens of thousands of parameters, sometimes even millions. This gives them an incredible amount of freedom and means they can fit a huge variety of complex datasets. But this great flexibility also makes the network prone to overfitting the training set. We need regularization.
+We already implemented one of the best regularization techniques in Chapter 10: early stopping. Moreover, even though Batch Normalization was designed to solve the unstable gradients problems, it also acts like a pretty good regularizer. In this sec‐ tion we will examine other popular regularization techniques for neural networks: ℓ1 and ℓ2 regularization, dropout, and max-norm regularization.
+ℓ1 and ℓ2 Regularization
+Just like you did in Chapter 4 for simple linear models, you can use ℓ2 regularization to constrain a neural network’s connection weights, and/or ℓ1 regularization if you want a sparse model (with many weights equal to 0). Here is how to apply ℓ2 regulari‐ zation to a Keras layer’s connection weights, using a regularization factor of 0.01:
+layer = keras.layers.Dense(100, activation="elu",
+kernel_initializer="he_normal", kernel_regularizer=keras.regularizers.l2(0.01))
+The l2() function returns a regularizer that will be called at each step during training to compute the regularization loss. This is then added to the final loss. As you might expect, you can just use keras.regularizers.l1() if you want ℓ1 regularization; if you want both ℓ1 and ℓ2 regularization, use keras.regularizers.l1_l2() (specifying both regularization factors).
+Since you will typically want to apply the same regularizer to all layers in your net‐ work, as well as using the same activation function and the same initialization strat‐ egy in all hidden layers, you may find yourself repeating the same arguments. This
+makes the code ugly and error-prone. To avoid this, you can try refactoring your code to use loops. Another option is to use Python’s functools.partial() function, which lets you create a thin wrapper for any callable, with some default argument values:
+from functools import partial
+RegularizedDense = partial(keras.layers.Dense,
+activation="elu", kernel_initializer="he_normal", kernel_regularizer=keras.regularizers.l2(0.01))
+model = keras.models.Sequential([ keras.layers.Flatten(input_shape=[28, 28]), RegularizedDense(300), RegularizedDense(100),
+RegularizedDense(10, activation="softmax",
+kernel_initializer="glorot_uniform")
+])
+Dropout
+Dropout is one of the most popular regularization techniques for deep neural net‐ works. It was proposed in a paper23 by Geoffrey Hinton in 2012 and further detailed in a 2014 paper24 by Nitish Srivastava et al., and it has proven to be highly successful: even the state-of-the-art neural networks get a 1–2% accuracy boost simply by adding dropout. This may not sound like a lot, but when a model already has 95% accuracy, getting a 2% accuracy boost means dropping the error rate by almost 40% (going from 5% error to roughly 3%).
+It is a fairly simple algorithm: at every training step, every neuron (including the input neurons, but always excluding the output neurons) has a probability p of being temporarily “dropped out,” meaning it will be entirely ignored during this training step, but it may be active during the next step (see Figure 11-9). The hyperparameter p is called the dropout rate, and it is typically set between 10% and 50%: closer to 20– 30% in recurrent neural nets (see Chapter 15), and closer to 40–50% in convolutional neural networks (see Chapter 14). After training, neurons don’t get dropped any‐ more. And that’s all (except for a technical detail we will discuss momentarily).
+23	Geoffrey E. Hinton et al., “Improving Neural Networks by Preventing Co-Adaptation of Feature Detectors,” arXiv preprint arXiv:1207.0580 (2012).
+24	Nitish Srivastava et al., “Dropout: A Simple Way to Prevent Neural Networks from Overfitting,” Journal of Machine Learning Research 15 (2014): 1929–1958.
+Figure 11-9. With dropout regularization, at each training iteration a random subset of all neurons in one or more layers—except the output layer—are “dropped out”; these neurons output 0 at this iteration (represented by the dashed arrows)
+It’s surprising at first that this destructive technique works at all. Would a company perform better if its employees were told to toss a coin every morning to decide whether or not to go to work? Well, who knows; perhaps it would! The company would be forced to adapt its organization; it could not rely on any single person to work the coffee machine or perform any other critical tasks, so this expertise would have to be spread across several people. Employees would have to learn to cooperate with many of their coworkers, not just a handful of them. The company would become much more resilient. If one person quit, it wouldn’t make much of a differ‐ ence. It’s unclear whether this idea would actually work for companies, but it certainly does for neural networks. Neurons trained with dropout cannot co-adapt with their neighboring neurons; they have to be as useful as possible on their own. They also cannot rely excessively on just a few input neurons; they must pay attention to each of their input neurons. They end up being less sensitive to slight changes in the inputs. In the end, you get a more robust network that generalizes better.
+Another way to understand the power of dropout is to realize that a unique neural network is generated at each training step. Since each neuron can be either present or absent, there are a total of 2N possible networks (where N is the total number of drop‐ pable neurons). This is such a huge number that it is virtually impossible for the same neural network to be sampled twice. Once you have run 10,000 training steps, you have essentially trained 10,000 different neural networks (each with just one training instance). These neural networks are obviously not independent because they share many of their weights, but they are nevertheless all different. The resulting neural network can be seen as an averaging ensemble of all these smaller neural networks.
+In practice, you can usually apply dropout only to the neurons in the top one to three layers (excluding the output layer).
+There is one small but important technical detail. Suppose p = 50%, in which case during testing a neuron would be connected to twice as many input neurons as it would be (on average) during training. To compensate for this fact, we need to multi‐ ply each neuron’s input connection weights by 0.5 after training. If we don’t, each neuron will get a total input signal roughly twice as large as what the network was trained on and will be unlikely to perform well. More generally, we need to multiply each input connection weight by the keep probability (1 – p) after training. Alterna‐ tively, we can divide each neuron’s output by the keep probability during training (these alternatives are not perfectly equivalent, but they work equally well).
+To implement dropout using Keras, you can use the keras.layers.Dropout layer. During training, it randomly drops some inputs (setting them to 0) and divides the remaining inputs by the keep probability. After training, it does nothing at all; it just passes the inputs to the next layer. The following code applies dropout regularization before every Dense layer, using a dropout rate of 0.2:
+model = keras.models.Sequential([ keras.layers.Flatten(input_shape=[28, 28]), keras.layers.Dropout(rate=0.2),
+keras.layers.Dense(300, activation="elu", kernel_initializer="he_normal"), keras.layers.Dropout(rate=0.2),
+keras.layers.Dense(100, activation="elu", kernel_initializer="he_normal"), keras.layers.Dropout(rate=0.2),
+keras.layers.Dense(10, activation="softmax")
+])
+Since dropout is only active during training, comparing the train‐ ing loss and the validation loss can be misleading. In particular, a model may be overfitting the training set and yet have similar training and validation losses. So make sure to evaluate the training loss without dropout (e.g., after training).
+If you observe that the model is overfitting, you can increase the dropout rate. Con‐ versely, you should try decreasing the dropout rate if the model underfits the training set. It can also help to increase the dropout rate for large layers, and reduce it for small ones. Moreover, many state-of-the-art architectures only use dropout after the last hidden layer, so you may want to try this if full dropout is too strong.
+Dropout does tend to significantly slow down convergence, but it usually results in a much better model when tuned properly. So, it is generally well worth the extra time and effort.
+If you want to regularize a self-normalizing network based on the SELU activation function (as discussed earlier), you should use alpha dropout: this is a variant of dropout that preserves the mean and standard deviation of its inputs (it was introduced in the same paper as SELU, as regular dropout would break self-normalization).
+Monte Carlo (MC) Dropout
+In 2016, a paper25 by Yarin Gal and Zoubin Ghahramani added a few more good rea‐ sons to use dropout:
+•	First, the paper established a profound connection between dropout networks (i.e., neural networks containing a Dropout layer before every weight layer) and approximate Bayesian inference,26 giving dropout a solid mathematical justifica‐ tion.
+•	Second, the authors introduced a powerful technique called MC Dropout, which can boost the performance of any trained dropout model without having to retrain it or even modify it at all, provides a much better measure of the model’s uncertainty, and is also amazingly simple to implement.
+If this all sounds like a “one weird trick” advertisement, then take a look at the follow‐ ing code. It is the full implementation of MC Dropout, boosting the dropout model we trained earlier without retraining it:
+y_probas = np.stack([model(X_test_scaled, training=True)
+for sample in range(100)]) y_proba = y_probas.mean(axis=0)
+Note that model(X) is similar to model.predict(X) except it returns a tensor rather than a NumPy array, and it supports the training argument. In this code example, setting training=True ensures that the Dropout layer remains active, so all predic‐ tions will be a bit different. We just make 100 predictions over the test set, and we stack them. Each call to the model returns a matrix with one row per instance and one column per class. Because there are 10,000 instances in the test set and 10 classes, this is a matrix of shape [10000, 10]. We stack 100 such matrices, so y_probas is an
+25	Yarin Gal and Zoubin Ghahramani, “Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning,” Proceedings of the 33rd International Conference on Machine Learning (2016): 1050–1059.
+26	Specifically, they show that training a dropout network is mathematically equivalent to approximate Bayesian inference in a specific type of probabilistic model called a Deep Gaussian Process.
+array of shape [100, 10000, 10]. Once we average over the first dimension (axis=0), we get y_proba, an array of shape [10000, 10], like we would get with a single predic‐ tion. That’s all! Averaging over multiple predictions with dropout on gives us a Monte Carlo estimate that is generally more reliable than the result of a single prediction with dropout off. For example, let’s look at the model’s prediction for the first instance in the Fashion MNIST test set, with dropout off:
+>>> np.round(model.predict(X_test_scaled[:1]), 2)
+array([[0. , 0. , 0. , 0. , 0. , 0. , 0. , 0.01, 0. , 0.99]],
+dtype=float32)
+The model seems almost certain that this image belongs to class 9 (ankle boot). Should you trust it? Is there really so little room for doubt? Compare this with the predictions made when dropout is activated:
+>>> np.round(y_probas[:, :1], 2)
+array([[[0.	, 0.	, 0.	, 0.	, 0.	, 0.14, 0.	, 0.17, 0.	, 0.68]],
+[[0.	, 0.	, 0.	, 0.	, 0.	, 0.16, 0.	, 0.2 , 0.	, 0.64]],
+[[0.	, 0.	, 0.	, 0.	, 0.	, 0.02, 0.	, 0.01, 0.	, 0.97]],
+[...]							
+This tells a very different story: apparently, when we activate dropout, the model is not sure anymore. It still seems to prefer class 9, but sometimes it hesitates with classes 5 (sandal) and 7 (sneaker), which makes sense given they’re all footwear. Once we average over the first dimension, we get the following MC Dropout predictions:
+>>> np.round(y_proba[:1], 2)
+array([[0. , 0. , 0. , 0. , 0. , 0.22, 0. , 0.16, 0. , 0.62]],
+dtype=float32)
+The model still thinks this image belongs to class 9, but only with a 62% confidence, which seems much more reasonable than 99%. Plus it’s useful to know exactly which other classes it thinks are likely. And you can also take a look at the standard devia‐ tion of the probability estimates:
+>>> y_std = y_probas.std(axis=0)
+>>> np.round(y_std[:1], 2)
+array([[0. , 0. , 0. , 0. , 0. , 0.28, 0. , 0.21, 0.02, 0.32]],
+dtype=float32)
+Apparently there’s quite a lot of variance in the probability estimates: if you were building a risk-sensitive system (e.g., a medical or financial system), you should prob‐ ably treat such an uncertain prediction with extreme caution. You definitely would not treat it like a 99% confident prediction. Moreover, the model’s accuracy got a small boost from 86.8 to 86.9:
+>>> accuracy = np.sum(y_pred == y_test) / len(y_test)
+>>> accuracy 0.8694
+The number of Monte Carlo samples you use (100 in this example) is a hyperparameter you can tweak. The higher it is, the more accu‐ rate the predictions and their uncertainty estimates will be. How‐ ever, if you double it, inference time will also be doubled. Moreover, above a certain number of samples, you will notice little improvement. So your job is to find the right trade-off between latency and accuracy, depending on your application.
+If your model contains other layers that behave in a special way during training (such as BatchNormalization layers), then you should not force training mode like we just did. Instead, you should replace the Dropout layers with the following MCDropout class:27
+class MCDropout(keras.layers.Dropout): def call(self, inputs):
+return super().call(inputs, training=True)
+Here, we just subclass the Dropout layer and override the call() method to force its training argument to True (see Chapter 12). Similarly, you could define an MCAlpha Dropout class by subclassing AlphaDropout instead. If you are creating a model from scratch, it’s just a matter of using MCDropout rather than Dropout. But if you have a model that was already trained using Dropout, you need to create a new model that’s identical to the existing model except that it replaces the Dropout layers with MCDrop out, then copy the existing model’s weights to your new model.
+In short, MC Dropout is a fantastic technique that boosts dropout models and pro‐ vides better uncertainty estimates. And of course, since it is just regular dropout dur‐ ing training, it also acts like a regularizer.
+Max-Norm Regularization
+Another regularization technique that is popular for neural networks is called maxnorm regularization: for each neuron, it constrains the weights w of the incoming connections such that ∥ w ∥2 ≤ r, where r is the max-norm hyperparameter and ∥ · ∥2 is the ℓ2 norm.
+Max-norm regularization does not add a regularization loss term to the overall loss function. Instead, it is typically implemented by computing ∥w∥2 after each training step and rescaling w if needed (w ← w r/‖ w ‖2).
+27	This MCDropout class will work with all Keras APIs, including the Sequential API. If you only care about the Functional API or the Subclassing API, you do not have to create an MCDropout class; you can create a regular Dropout layer and call it with training=True.
+Reducing r increases the amount of regularization and helps reduce overfitting. Maxnorm regularization can also help alleviate the unstable gradients problems (if you are not using Batch Normalization).
+To implement max-norm regularization in Keras, set the kernel_constraint argu‐ ment of each hidden layer to a max_norm() constraint with the appropriate max value, like this:
+keras.layers.Dense(100, activation="elu", kernel_initializer="he_normal", kernel_constraint=keras.constraints.max_norm(1.))
+After each training iteration, the model’s fit() method will call the object returned by max_norm(), passing it the layer’s weights and getting rescaled weights in return, which then replace the layer’s weights. As you’ll see in Chapter 12, you can define your own custom constraint function if necessary and use it as the kernel_con straint. You can also constrain the bias terms by setting the bias_constraint argument.
+The max_norm() function has an axis argument that defaults to 0. A Dense layer usu‐ ally has weights of shape [number of inputs, number of neurons], so using axis=0 means that the max-norm constraint will apply independently to each neuron’s weight vector. If you want to use max-norm with convolutional layers (see Chap‐ ter 14), make sure to set the max_norm() constraint’s axis argument appropriately (usually axis=[0, 1, 2]).
+Summary and Practical Guidelines
+In this chapter we have covered a wide range of techniques, and you may be wonder‐ ing which ones you should use. This depends on the task, and there is no clear con‐ sensus yet, but I have found the configuration in Table 11-3 to work fine in most cases, without requiring much hyperparameter tuning. That said, please do not con‐ sider these defaults as hard rules!
+Table 11-3. Default DNN configuration
+Kernel initializer	He initialization
+Activation function	ELU
+Normalization	None if shallow; Batch Norm if deep Regularization	Early stopping (+ℓ2 reg. if needed)
+Optimizer	Momentum optimization (or RMSProp or Nadam) Learning rate schedule 1cycle
+If the network is a simple stack of dense layers, then it can self-normalize, and you should use the configuration in Table 11-4 instead.
+Table 11-4. DNN configuration for a self-normalizing net
+Kernel initializer	LeCun initialization
+Activation function	SELU
+Normalization	None (self-normalization)
+Regularization	Alpha dropout if needed
+Optimizer	Momentum optimization (or RMSProp or Nadam) Learning rate schedule 1cycle
+Don’t forget to normalize the input features! You should also try to reuse parts of a pretrained neural network if you can find one that solves a similar problem, or use unsupervised pretraining if you have a lot of unlabeled data, or use pretraining on an auxiliary task if you have a lot of labeled data for a similar task.
+While the previous guidelines should cover most cases, here are some exceptions:
+•	If you need a sparse model, you can use ℓ1 regularization (and optionally zero out the tiny weights after training). If you need an even sparser model, you can use the TensorFlow Model Optimization Toolkit. This will break self-normalization, so you should use the default configuration in this case.
+•	If you need a low-latency model (one that performs lightning-fast predictions), you may need to use fewer layers, fold the Batch Normalization layers into the previous layers, and possibly use a faster activation function such as leaky ReLU or just ReLU. Having a sparse model will also help. Finally, you may want to reduce the float precision from 32 bits to 16 or even 8 bits (see “Deploying a Model to a Mobile or Embedded Device” on page 685). Again, check out TFMOT.
+•	If you are building a risk-sensitive application, or inference latency is not very important in your application, you can use MC Dropout to boost performance and get more reliable probability estimates, along with uncertainty estimates.
+With these guidelines, you are now ready to train very deep nets! I hope you are now convinced that you can go quite a long way using just Keras. There may come a time, however, when you need to have even more control; for example, to write a custom loss function or to tweak the training algorithm. For such cases you will need to use TensorFlow’s lower-level API, as you will see in the next chapter.
+Exercises
+1.	Is it OK to initialize all the weights to the same value as long as that value is selected randomly using He initialization?
+2.	Is it OK to initialize the bias terms to 0?
+3.	Name three advantages of the SELU activation function over ReLU.
+4.	In which cases would you want to use each of the following activation functions: SELU, leaky ReLU (and its variants), ReLU, tanh, logistic, and softmax?
+5.	What may happen if you set the momentum hyperparameter too close to 1 (e.g., 0.99999) when using an SGD optimizer?
+6.	Name three ways you can produce a sparse model.
+7.	Does dropout slow down training? Does it slow down inference (i.e., making predictions on new instances)? What about MC Dropout?
+8.	Practice training a deep neural network on the CIFAR10 image dataset:
+a.	Build a DNN with 20 hidden layers of 100 neurons each (that’s too many, but it’s the point of this exercise). Use He initialization and the ELU activation function.
+b.	Using Nadam optimization and early stopping, train the network on the CIFAR10 dataset. You can load it with keras.datasets.cifar10.load_ data(). The dataset is composed of 60,000 32 × 32–pixel color images (50,000 for training, 10,000 for testing) with 10 classes, so you’ll need a softmax out‐ put layer with 10 neurons. Remember to search for the right learning rate each time you change the model’s architecture or hyperparameters.
+c.	Now try adding Batch Normalization and compare the learning curves: Is it converging faster than before? Does it produce a better model? How does it affect training speed?
+d.	Try replacing Batch Normalization with SELU, and make the necessary adjust‐ ements to ensure the network self-normalizes (i.e., standardize the input fea‐ tures, use LeCun normal initialization, make sure the DNN contains only a sequence of dense layers, etc.).
+e.	Try regularizing the model with alpha dropout. Then, without retraining your model, see if you can achieve better accuracy using MC Dropout.
+f.	Retrain your model using 1cycle scheduling and see if it improves training speed and model accuracy.
+Solutions to these exercises are available in Appendix A.

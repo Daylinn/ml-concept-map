@@ -1,0 +1,352 @@
+CHAPTER 2
+
+End-to-End Machine Learning Project
+
+In this chapter you will work through an example project end to end, pretending to be a recently hired data scientist at a real estate company. Here are the main steps you will go through: Look at the big picture. Get the data. Discover and visualize the data to gain insights. Prepare the data for Machine Learning algorithms. Select a model and train it. Fine-tune your model. Present your solution. Launch, monitor, and maintain your system.
+
+Working with Real Data
+When you are learning about Machine Learning, it is best to experiment with real- world data, not artificial datasets. Fortunately, there are thousands of open datasets to choose from, ranging across all sorts of domains. Here are a few places you can look to get data:
+
+The example project is fictitious; the goal is to illustrate the main steps of a Machine Learning project, not to learn anything about the real estate business.
+
+Popular open data repositories include the UC Irvine Machine Learning Repository, Kaggle datasets, and Amazon's AWS datasets. These repositories offer a wide range of data for machine learning projects.
+
+There are also meta portals that list open data repositories, such as Data Portals, OpenDataMonitor, and Quandl. These portals make it easier to find and access relevant datasets.
+
+Other pages that list popular open data repositories include Wikipedia's list of Machine Learning datasets, Quora.com, and the datasets subreddit. These resources are helpful for finding a variety of datasets for different purposes.
+
+In this chapter, we will be using the California Housing Prices dataset from the StatLib repository. This dataset is based on data from the 1990 California census. Although it is not recent, it has many qualities for learning and we will treat it as if it were recent data. For teaching purposes, a categorical attribute has been added and some features have been removed.
+
+Figure 2-1. California housing prices
+
+Welcome to the Machine Learning Housing Corporation! Your first task is to use California census data to build a model of housing prices in the state. This data includes metrics such as the population, median income, and median housing price for each block group in California. Block groups are the smallest geographical unit for which the US Census Bureau publishes sample data (a block group typically has a population of 600 to 3,000 people). We will call them “districts” for short. Your model should learn from this data and be able to predict the median housing price in any district, given all the other metrics.
+
+Since you are a well-organized data scientist, the first thing you should do is pull out your Machine Learning project checklist. You can start with the one in Appendix B; it should work reasonably well for most Machine Learning projects, but make sure to adapt it to your needs. In this chapter we will go through many checklist items, but we will also skip a few, either because they are self- explanatory or because they will be discussed in later chapters.
+Frame the Problem
+The first question to ask your boss is what exactly the business objective is. Building a model is probably not the end goal. How does the company expect to use and benefit from this model? Knowing the objective is important because it will determine how you frame the problem, which algorithms you will select, which performance measure you will use to evaluate your model, and how much effort you will spend tweaking it.
+Your boss answers that your model's output (a prediction of a district's median housing price) will be fed to another Machine Learning system, along with many other signals. This downstream system will determine whether it is worth investing in a given area or not. Getting this right is critical, as it directly affects revenue.
+
+A piece of information fed to a Machine Learning system is often called a signal, in reference to Claude Shannon’s information theory, which he developed at Bell Labs to improve telecommunications. His theory: you want a high signal-to-noise ratio.
+
+The next question to ask your boss is what the current solution looks like (if any). The current situation will often give you a reference for performance, as well as insights on how to solve the problem. Your boss answers that the district housing prices are currently estimated manually by experts: a team gathers up-to-date information about a district, and when they cannot get the median housing price, they estimate it using complex rules.
+
+This is costly and time-consuming, and their estimates are not great; in cases where they manage to find out the actual median housing price, they often realize that their estimates were off by more than 20%. This is why the company thinks that it would be useful to train a model to predict a district's median housing price, given other data about that district. The census data looks like a great dataset to exploit for this purpose, since it includes the median housing prices of thousands of districts, as well as other data.
+
+With all this information, you are now ready to start designing your system. First, you need to frame the problem: is it supervised, unsupervised, or Reinforcement Learning? Is it a classification task, a regression task, or something else? Should you use batch learning or online learning techniques? Before you read on,
+
+If the data were huge, you could either split your batch learning work across multiple servers (using the MapReduce technique) or use an online learning technique.
+
+Select a Performance Measure
+Your next step is to select a performance measure. A typical performance measure for regression problems is the Root Mean Square Error (RMSE). It gives an idea of how much error the system typically makes in its predictions, with a higher weight for large errors. Equation 2-1 shows the mathematical formula to compute the RMSE.
+Equation 2-1. Root Mean Square Error (RMSE)
+
+RMSE X, h  =
+
+Recall that the transpose operator flips a column vector into a row vector (and vice versa).
+
+Even though the RMSE is generally the preferred performance measure for regression tasks, in some contexts you may prefer to use another function. For example, suppose that there are many outlier districts. In that case, you may consider using the mean absolute error (MAE, also called the average absolute deviation; see Equation 2-2):
+
+MAE X, h = 1 ��m hxi − yi mi = 1
+
+Chapter 2: End-to-End Machine Learning Project
+Welcome to the real Machine Learning world! In this chapter, you will go through an end-to-end project, using all that you have learned so far and tackling a real dataset. You will start by creating a workspace for your project and getting the data. Then you will load the data, explore it, and create a test set. Next, you will preprocess the data, select and train a model, and fine-tune the model. Finally, you will present your solution and launch it, and document your project. Let’s get started!
+
+The Main Steps
+1. Look at the big picture.
+2. Get the data.
+3. Discover and visualize the data to gain insights.
+4. Prepare the data for Machine Learning algorithms.
+5. Select a model and train it.
+6. Fine-tune your model.
+7. Present your solution.
+8. Launch, monitor, and maintain your system.
+9. Try your solution on the test set.
+
+Frame the Problem
+The first question to ask is what exactly is the business objective; building a model is probably not the end goal. How does the company expect to use and benefit from this model? This is important because it will determine how you frame
+
+The latest version of Python 3 is recommended. Python 2.7+ may work too, but now that it’s deprecated, all major scientific libraries are dropping support for it, so you should migrate to Python 3 as soon as possible.
+
+You can check to see if pip is installed by typing the following command:
+
+pip 19.3.1 from [...]/lib/python3.7/site-packages/pip (python 3.7)
+
+You should make sure you have a recent version of pip installed. To upgrade the pip module, type the following (the exact version may differ):
+
+Collecting pip [...]
+Successfully installed pip-19.3.1
+
+I’ll show the installation steps using pip in a bash shell on a Linux or macOS system. You may need to adapt these commands to your own system. On Windows, I recommend installing Anaconda instead.
+
+If you want to upgrade pip for all users on your machine rather than just your own user, you should remove the --user option and make sure you have administrator rights (e.g., by adding sudo before the whole command on Linux or macOS).
+
+Alternative tools include venv (very similar to virtualenv and included in the standard library), virtualenv-wrapper (provides extra functionalities on top of virtualenv), pyenv (allows easy switching between Python versions), and pipenv (a great packaging tool by the same author as the popular requests library, built on top of pip and virtualenv).
+
+Now you can install all the required modules and their dependencies using this simple pip command (if you are not using a virtualenv, you will need the --user option or administrator rights):
+Now you can fire up Jupyter by typing the following command:
+
+A Jupyter server is now running in your terminal, listening to port 8888. You can visit this server by opening your web browser to http://localhost:8888/ (this usually happens automatically when the server starts).
+
+Note that Jupyter can handle multiple versions of Python, and even many other languages such as R or Octave.
+
+Your workspace in Jupyter
+A notebook contains a list of cells. Each cell can contain executable code or formatted text. Right now the notebook contains only one empty code cell, labeled “In [1]:”. This sends the current cell to this notebook’s Python kernel, which runs it and returns the output. The result is displayed below the cell, and since you’ve reached the end of the notebook, a new cell is automatically created. Go through the User Interface Tour from Jupyter’s Help menu to learn the basics.
+
+In this chapter, you will learn how to set up your Python environment with all the libraries you will need for this project. You can use any programming language you want, but throughout the book we will use Python, because it combines a relatively simple syntax with powerful libraries that will be useful for Machine Learning. Some of these libraries are covered in this chapter: NumPy, pandas, Matplotlib, and Scikit-Learn. If you do not know these libraries, do not worry: we will go through them in detail in this chapter. There are also other libraries that we will introduce later, when we need them.
+
+Python is an interpreted language, which means you can run the code as soon as you write it. This is great for interactive use, but it can be quite slow when you need to run long pieces of code, since the interpreter will analyze the code line by line, every time you run it. To avoid this issue, you can use a Just-in-Time (JIT) compiler, such as PyPy. However, for this project we will just use standard CPython.
+
+To get started, you need to have Python 3 installed. Most likely, you already have it installed on your system, but if you don't, you can use your favorite
+
+You may have noticed that the load_housing_data() function takes an optional argument: the path to the CSV file. This will be useful when you want to load data from a different location. If you don't provide any path, the function will default to the HOUSING_PATH variable, which is set to the dataset folder in the current directory.
+
+It’s always a good idea to write functions instead of copying and pasting code snippets everywhere. This will make your code more reusable and easier to maintain.
+
+When writing a function, you should pay attention to a few things. First, it’s good practice to add a docstring (i.e., a comment describing the function’s purpose and usage). This will make it easier for others (and yourself in the future) to understand the function. Second, you may want to add some error checking to make sure the function behaves as expected (e.g., checking if the file exists). You might also need to check legal constraints, such as private fields that should never be copied to unsafe data stores. In a real project you would save this code in a Python file, but for now you can just write it in your Jupyter notebook.
+
+Now let’s load the data using pandas. Once again, you should write a
+
+In this chapter, we will be exploring the California housing dataset. This dataset is a collection of information about different districts in California, such as their location, housing characteristics, and median house value. The dataset contains 20,640 instances, with 10 attributes for each district.
+
+To start, we will use the head() method to look at the top five rows of the dataset. Each row represents one district and includes attributes like longitude, latitude, housing median age, total rooms, total bedrooms, population, households, median income, median house value, and ocean proximity.
+
+The info() method is also useful for getting a quick description of the data. It tells us the total number of rows, each attribute's type, and the number of non-null values. We can see that the ocean proximity attribute is of type object, meaning it's likely a categorical attribute.
+
+We can use the value_counts() method to see how many districts belong to each category in the ocean proximity attribute. This tells us that the majority of districts are <1H OCEAN, followed by INLAND, NEAR OCEAN, NEAR BAY, and ISLAND.
+
+The describe() method gives us a summary of the numerical attributes in the dataset. This includes the count, mean
+
+12	The standard deviation is generally denoted σ (the Greek letter sigma), and it is the square root of the var‐ iance, which is the average of the squared deviation from the mean. When a feature has a bell-shaped normal distribution (also called a Gaussian distribution), which is very common, the “68-95-99.7” rule applies: about 68% of the values fall within 1σ of the mean, 95% within 2σ, and 99.7% within 3σ.
+ 
+The hist() method relies on Matplotlib, which in turn relies on a user-specified graphical backend to draw on your screen. So before you can plot anything, you need to specify which backend Matplot‐ lib should use. The simplest option is to use Jupyter’s magic com‐ mand %matplotlib inline. This tells Jupyter to set up Matplotlib so it uses Jupyter’s own backend. Plots are then rendered within the notebook itself. Note that calling show() is optional in a Jupyter notebook, as Jupyter will automatically display plots when a cell is executed.
+
+There are 9 numerical attributes in the dataset. Let's take a closer look at each one.
+
+1. The first attribute is the "longitude" of the district. This represents the distance east or west of a reference point, usually the Prime Meridian. By itself, this attribute doesn't tell us much, but it may be useful in combination with other attributes.
+
+2. The second attribute is the "latitude" of the district. This represents the distance north or south of the Equator. Like longitude, it may be more useful when combined with other attributes.
+
+3. The third attribute is the "housing_median_age" of the district. This represents the age of the houses in the district, in years. It is a numerical attribute, but it may also be treated as a categorical attribute (e.g. "older" or "newer" houses).
+
+4. The fourth attribute is the "total_rooms" in the district. This represents the total number of rooms in the houses in the district, including bedrooms, living rooms, bathrooms, etc.
+
+5. The fifth attribute is the "total_bedrooms" in the district. This represents the total number of bedrooms in the houses in the district.
+
+6. The sixth attribute is the "population" of the
+
+Wait! Before you look at the data any further, you need to create a test set, put it aside, and never look at it.
+
+It may sound strange to voluntarily set aside part of the data at this stage. After all, you have only taken a quick glance at the data, and surely you should learn a whole lot more about it before you decide what algorithms to use, right? This is true, but your brain is an amazing pattern detection system, which means that it is highly prone to overfitting: if you look at the test set, you may stumble upon some seemingly interesting pattern in the test data that leads you to select a particular kind of Machine Learning model. When you estimate the generalization error using the test set, your estimate will be too optimistic, and you will launch a system that will not perform as well as expected. This is called data snooping bias.
+Creating a test set is theoretically simple: pick some instances randomly, typically 20% of the dataset (or less if your dataset is very large), and set them aside.
+You can then use this function like this:
+train_set, test_set = split_train_test(housing, 0.2)
+len(train_set)
+len(test_set)
+Well, this works, but it is not perfect: if you run the program again, it will generate a different test set! Over time, you (or your Machine
+
+1	Welcome to the world of Machine Learning! This book is an introduction to the exciting field of Machine Learning, where computers learn from data without being explicitly programmed. In this chapter, we will cover the fundamental concepts and tools that you need to know in order to get started with Machine Learning.
+2	First, let’s clarify what we mean by Machine Learning. In short, it is all about making predictions. We have some data about a particular problem, and we want to use this data to make predictions about new, unseen data. For example, we may have data about houses (square footage, number of bedrooms, etc.) and their sale prices, and we want to use this data to predict the sale price of a new house given its features.
+3	To do this, we need to use a Machine Learning algorithm. An algorithm is simply a set of rules for solving a problem. In Machine Learning, we use algorithms to learn patterns from data and use these patterns to make predictions or take actions. There are many different types of Machine Learning algorithms, and we will cover some of the most popular ones in this book.
+4	Before we dive into the different types of Machine Learning algorithms, let’s take a step back and look at the big picture. There
+
+15	The location information is actually quite coarse, and as a result many districts will have the exact same ID, so they will end up in the same set (test or train). This introduces some unfortunate sampling bias.
+ 
+that was either less than 49% female or more than 54% female. Either way, the survey results would be significantly biased.
+Suppose you chatted with experts who told you that the median income is a very important attribute to predict median housing prices. You may want to ensure that the test set is representative of the various categories of incomes in the whole dataset. Since the median income is a continuous numerical attribute, you first need to create an income category attribute. Let’s look at the median income histogram more closely (back in Figure 2-8): most median income values are clustered around 1.5 to 6 (i.e., $15,000–$60,000), but some median incomes go far beyond 6. It is important to have a sufficient number of instances in your dataset for each stratum, or else the estimate of a stratum’s importance may be biased. This means that you should not have too many strata, and each stratum should be large enough. The following code uses the pd
+
+You can also see that the test set generated using stratified sampling is much more representative of the overall dataset, whereas the test set generated using purely random sampling is skewed. This is because the StratifiedShuffleSplit class uses the income category as the stratification criterion, which means that it will create a test set that has a similar distribution of income categories as the overall dataset. This is important, because you want your test set to be representative of the overall dataset, so that your model can be evaluated on data that is similar to what it will encounter in the real world.
+
+Discover and Visualize the Data to Gain Insights
+So far you have only taken a quick glance at the data to get a general understanding of the kind of data you are manipulating. Now the goal is to go into a little more depth.
+First, make sure you have put the test set aside and you are only exploring the train‐ ing set. Also, if the training set is very large, you may want to sample an exploration set, to make manipulations easy and fast. In our case, the set is quite small, so you can just work directly on the full set. Let’s create a copy so that you can play with it without harming the training set:
+housing = strat_train_set.copy()
+Visualizing Geographical Data
+Since there is geographical information (latitude and longitude), it is a good idea to create a scatterplot of all districts to visualize the data (Figure 2-11):
+housing.plot(kind="scatter", x="longitude", y="latitude")
+
+Given the text above, remove programming code snippets or tabular data, and then return the remaining text as is.
+
+
+Discover and Visualize the Data to Gain Insights
+So far you have only taken a quick glance at the data to get a general understanding of the kind of data you are manipulating
+
+Our brains are very good at spotting patterns in pictures, but you may need to play around with visualization parameters to make the patterns stand out.
+Now let’s look at the housing prices. The radius of each circle represents the district’s population, and the color represents the price. We will use a predefined color map called jet, which ranges from blue (low values) to red (high prices).
+
+This image tells you that the housing prices are very much related to the location (e.g., close to the ocean) and to the population density, as you probably knew already. A clustering algorithm should be useful for detecting the main cluster and for adding new features that measure the proximity to the cluster centers. The ocean proximity attribute may be useful as well, although in Northern California the housing prices in coastal districts are not too high, so it is not a simple rule.
+Looking for Correlations
+Since the dataset is not too large, you can easily compute the standard correlation coefficient (also called Pearson's r) between every pair of attributes using the corr() method. Now let's look at how much each attribute correlates with the median house value:
+median_house_value: 1.000000
+median_income: 0.687170
+total_rooms: 0.135231
+housing_median_age: 0.114220
+
+The correlation coefficient ranges from –1 to 1. When it is close to 1, it means that there is a strong positive correlation; for example, the median house value tends to go up when the median income goes up. When the coefficient is close to –1, it means that there is a strong negative correlation; you can see a small negative correlation between the latitude and the median house value (i.e., prices have a slight tendency to go down when you go north). Finally, coefficients close to 0 mean that there is no linear correlation. Figure 2-14 shows various plots along with the correlation coeffi‐ cient between their horizontal and vertical axes.
+
+Figure 2-14. Standard correlation coefficient of various datasets (source: Wikipedia; public domain image)
+
+The correlation coefficient only measures linear correlations (“if x goes up, then y generally goes up/down”). It may completely miss out on nonlinear relationships (e.g., “if x is close to 0, then y gener‐ ally goes up”). Note how all the plots of the bottom row have a cor‐ relation coefficient equal to 0, despite the fact that their axes are clearly not independent: these are examples of nonlinear relation‐ ships. Also, the second row shows examples where the correlation coefficient is equal to 1 or –1; notice that this has nothing to do with the slope. For example, your height in inches has a correlation coefficient of 1 with your height in feet or in nanometers.
+
+Another way to check for correlation between attributes is to use the pandas scatter_matrix() function, which plots every numerical attribute against every other numerical attribute. Since there are now 11 numerical attributes, you would get 112 = 121 plots, which would not fit on a page—so let’s just focus on a few promising attributes that seem most correlated with the median housing value.
+
+Given the text above, remove programming code snippets or tabular data, and then return the remaining text as is.
+
+Exploring the Data
+The first step in any Machine Learning project is to get familiar with the data: how many attributes there are, what the data looks like, which attributes are numerical, categorical, and so on. Below is a description of the data that you can use to get a feel for it.
+
+•	Each row represents a district.
+•	There are 10 attributes: longitude, latitude, housing_median_age, total_rooms, total_bedrooms, population, households, median_income, median_house_value, and ocean_proximity.
+•	The total number of rows is 20,640.
+•	The data types are mostly numerical, with the exception of ocean_proximity, which is a text attribute.
+•	There are some missing values in the total_bedrooms attribute.
+•	The median_house_value attribute seems to be capped at $500,000, which may be an issue since it is the target attribute (your labels). The attributes are all numerical, except the ocean_proximity field. Its type is object, so it could hold any kind of Python object, but since you loaded this data from a CSV file you know that it must be a text attribute. When you looked at the top five rows, you probably noticed that the values in that column
+
+Scikit-Learn is an open source machine learning library for Python that provides a simple and efficient tools for data mining and data analysis. It is built on top of NumPy, SciPy, and matplotlib, and is designed to work with the Python scientific computing ecosystem.
+
+The library is built around the Estimator interface, which is the core data structure in Scikit-Learn. An estimator is an object that can learn from data and make predictions on new data. It is a Python class that implements the fit() and predict() methods. The fit() method takes a dataset (usually a NumPy array) and learns from it, while the predict() method takes a new dataset and makes predictions based on the learned parameters.
+
+Estimators can be further divided into three categories: transformers, predictors, and inspection.
+
+Transformers are estimators that can transform a dataset. For example, an Imputer transformer can take a dataset with missing values and fill in those missing values with a specified strategy (e.g. mean, median, etc.). Transformers have a fit() method that learns from the dataset and a transform() method that applies the transformation to the dataset. They also have a fit_transform() method that combines the fit() and transform() methods for convenience.
+
+Predictors are estim
+
+Handling Text and Categorical Attributes
+So far we have only dealt with numerical attributes, but now let’s look at text attributes. In this dataset, there is just one: the ocean_proximity attribute. Let’s look at its value for the first 10 instances:
+
+Some predictors also provide methods to measure the confidence of their predictions. It's not arbitrary text: there are a limited number of possible values, each of which represents a category. So this attribute is a categorical attribute. Most Machine Learning algorithms prefer to work with numbers, so let's convert these categories from text to numbers. For this, we can use Scikit-Learn's OrdinalEncoder class. You can get the list of categories using the categories_ instance variable. It is a list containing a 1D array of categories for each categorical attribute. One issue with this representation is that ML algorithms will assume that two nearby values are more similar than two distant values. This may be fine in some cases, but it is obviously not the case for the ocean_proximity column. To fix this issue, a common solution is to create one binary attribute per category: one attribute equal to 1 when the category is "<1H OCEAN" (and 0 otherwise), another attribute equal to 1 when the category is "INLAND" (and 0 otherwise), and so on. This is called one-hot encoding, because only one attribute will be equal to 1 (hot), while the others will be 0 (cold). The new attributes are sometimes
+
+The next step is to convert the categorical values into numerical values, as most Machine Learning algorithms prefer to work with numbers. One common way to do so is to create one binary attribute per category: one attribute equal to 1 when the category is “<1H OCEAN” (and 0 otherwise), another attribute equal to 1 when the category is “INLAND” (and 0 otherwise), and so on. This is called one-hot encoding, because only one attribute will be equal to 1 (hot), while the others will be 0 (cold). The new attributes are sometimes called dummy attributes. Scikit-Learn provides a OneHotEncoder class to convert categorical values into one-hot vectors. Notice that the output is a SciPy sparse matrix, instead of a NumPy array. This is very useful when you have categorical attributes with thousands of categories. After one-hot encoding, we get a matrix with thousands of columns, and the matrix is full of 0s except for a single 1 per row. Using up tons of memory mostly to store zeros would be very wasteful, so instead a sparse matrix only stores the location of the nonzero elements. You can use it mostly like a normal 2D array, but if you really
+
+Before Scikit-Learn 0.20, the method could only encode integer categorical values, but since 0.20 it can also handle other types of inputs, including text categorical inputs.
+See SciPy’s documentation for more details.
+
+If a categorical attribute has a large number of possible categories (e.g., country code, profession, species), then one-hot encoding will result in a large number of input features. This may slow down training and degrade performance. If this happens, you may want to replace the categorical input with useful numerical features related to the categories: for example, you could replace the ocean_proximity feature with the distance to the ocean (similarly, a country code could be replaced with the country’s population and GDP per capita). Alternatively, you could replace each category with a learnable, low-dimensional vector called an embedding. Each category’s representation would be learned during training. This is an example of representation learning (see Chapters 13 and 17 for more details).
+
+Custom Transformers
+Although Scikit-Learn provides many useful transformers, you will need to write your own for tasks such as custom cleanup operations or combining specific attributes. You will want your transformer to work seamlessly with Scikit-Learn func‐ tionalities (such as pipelines), and
+
+As you can see, there are many data transformation steps that need to be executed in the right order. Fortunately, Scikit-Learn provides the Pipeline class to help with such sequences of transformations. Here is a small pipeline for the numerical attributes:
+
+The Pipeline constructor takes a list of name/estimator pairs defining a sequence of steps. All but the last estimator must be transformers (i.e., they must have a fit_transform() method). The names can be anything you like (as long as they are unique and don’t contain double underscores,  ); they will come in handy later for hyperparameter tuning.
+
+When you call the pipeline’s fit() method, it calls fit_transform() sequentially on all transformers, passing the output of each call as the parameter to the next call until it reaches the final estimator, for which it calls the fit() method.
+
+The pipeline exposes the same methods as the final estimator. In this example, the last estimator is a StandardScaler, which is a transformer, so the pipeline has a trans form() method that applies all the transforms to the data in sequence (and of course also a fit_transform() method, which is the one we used).
+
+So far, we have handled the categorical columns and the numerical columns sepa‐ rately.
+
+Instead of using a transformer, you can specify the string "drop" if you want the columns to be dropped, or you can specify "pass through" if you want the columns to be left untouched. By default, the remaining columns (i.e., the ones that were not listed) will be dropped, but you can set the remainder hyperparameter to any transformer (or to "passthrough") if you want these columns to be handled differently.
+
+If you are using Scikit-Learn 0.19 or earlier, you can use a third-party library such as sklearn-pandas, or you can roll out your own custom transformer to get the same functionality as the ColumnTransformer. Alternatively, you can use the FeatureUnion
+
+Machine Learning
+Welcome to Machine Learning Housing Corporation! Your task is to predict median house values in California using the California census data. This data has metrics such as the population, median income, median housing price, and so on for each block group in California. Block groups are the smallest geographical unit for which the US Census Bureau publishes sample data (a block group typically has 600 to 3,000 people). We will just call them “districts” for short.
+Look at the Big Picture
+Welcome to Machine Learning Housing Corporation! Your task is to predict median house values in California using the California census data. This data has metrics such as the population, median income, median housing price, and so on for each district in California. We will just call them “districts” for short.
+
+As a first step, you need to frame the problem: is it a supervised, unsupervised, or reinforcement learning problem? Is it a classification task, a regression task, or something else? Before you read on, pause and try to answer these questions for yourself.
+Have a Quick Look at the Data Structure
+Before you actually look at the data, you need to create a workspace and download the data. To do this, simply run the following commands:
+
+In this section, we have trained various models using the housing dataset to predict median house values. We started with a simple Linear Regression model and moved on to a more complex Decision Tree model. We then used cross-validation to evaluate the performance of the Decision Tree model and found that it was overfitting the training set. To address this issue, we tried another model called RandomForestRegressor, which showed promising results. However, we also noticed that this model was still overfitting the training set. To avoid overfitting, we can try simplifying the model, regularizing it, or obtaining more training data. Before diving deeper into any specific model, it is important to experiment with various models from different categories and shortlist the most promising ones.
+
+When you have trained a few promising models, it is important to save them so that you can easily come back to them later. This includes saving both the hyperparameters and the trained parameters, as well as cross-validation scores and possibly actual predictions. This allows for easy comparison between different models and their performance.
+
+To save Scikit-Learn models, you can use Python's pickle module or the joblib library, which is more efficient for serializing large NumPy arrays. Joblib can be installed using pip and is used as follows:
+
+import joblib
+joblib.dump(my_model, "my_model.pkl")
+# and later...
+my_model_loaded = joblib.load("my_model.pkl")
+
+Once you have a shortlist of promising models, you can then fine-tune them to further improve their performance. This can be done in various ways, such as manually tweaking hyperparameters, but this can be tedious and time-consuming.
+
+A better approach is to use Scikit-Learn's GridSearchCV, which searches for the best combination of hyperparameter values using cross-validation. This means that it will try out all possible combinations of hyperparameters and evaluate their performance, helping you find the optimal values. For example, the code above shows how to use GridSearchCV to find
+
+When you have no idea what value a hyperparameter should have, a simple approach is to try out consecutive powers of 10 (or a smaller number if you want a more fine-grained search, as shown in this example with the n_estimators hyperparameter).
+
+This param_grid tells Scikit-Learn to first evaluate all 3 × 4 = 12 combinations of n_estimators and max_features hyperparameter values specified in the first dict, then try all 2 × 3 = 6 combinations of hyperparameter values in the second dict, but this time with the bootstrap hyperparameter set to False instead of True.
+
+The grid search will explore 12 + 6 = 18 combinations of RandomForestRegressor hyperparameter values, and it will train each model 5 times. In other words, all in all, there will be 18 × 5 = 90 rounds of training! It may take quite a long time, but when it is done you can get the best combination of parameters like this:
+
+grid_search.best_params_
+
+Since 8 and 30 are the maximum values that were evaluated, you should probably try searching again with higher values; the score may continue to improve.
+
+In machine learning, a grid search is a technique used for finding the optimal combination of hyperparameter values for a given model. Hyperparameters are parameters that are set before training the model and cannot be learned during the training process. They affect the behavior of the model and can significantly impact its performance. A grid search involves creating a grid of possible hyperparameter values and then evaluating the model for each combination of values. This allows us to find the best combination of hyperparameters that results in the highest performance for the model.
+
+The grid search process involves the following steps:
+
+1. Defining the set of hyperparameters to be tuned: This step involves identifying the hyperparameters that need to be tuned for the given model.
+
+2. Defining the range of values for each hyperparameter: For each hyperparameter, we need to specify a range of values to be tested. This can be done manually or using a predefined set of values.
+
+3. Creating a grid of all possible combinations: We then create a grid of all possible combinations of values for the hyperparameters.
+
+4. Training and evaluating the model for each combination: The model is trained and evaluated for each combination of hyperparameter values in the grid.
+
+5. Selecting the best combination: After evaluating all combinations, we select the
+
+If GridSearchCV is initialized with refit=True (which is the default), then once it finds the best estimator using cross- validation, it retrains it on the whole training set. This is usually a good idea, since feeding it more data will likely improve its performance.
+
+Randomized Search
+
+
+Another option for hyperparameter tuning is to use randomized search, which is suitable when the hyperparameter search space is large. Instead of trying out all possible combinations, this approach evaluates a given number of random combinations by selecting a random value for each hyperparameter at every iteration. This is useful when there are many hyperparameters to tune and the number of iterations is limited.
+
+To implement randomized search, we use the RandomizedSearchCV class from Scikit-Learn. It works in the same way as GridSearchCV, but instead of trying out all possible combinations, it evaluates a given number of random combinations. The main benefit of this approach is that we can specify the number of iterations to run, which allows us to control the computing time.
+
+For example, if we set the number of iterations to 10, the algorithm will evaluate 10 random combinations of hyperparameters. This means that we can specify a larger search space without increasing the computing time. However, the downside is that we may not find the optimal solution as quickly as we would with grid search.
+
+To use randomized search, we first define a grid of hyperparameters and their possible values. Then, we create an instance of the RandomizedSearchCV class, passing in the model, the hyper
+
+Welcome to the Machine Learning Housing Corporation! In this chapter, we will go through an example project end to end, pretending to be a recently hired data scientist at ML Housing Corp., a small company that provides affordable housing to rural areas. Here are the main steps you will go through:
+1. Look at the big picture.
+2. Get the data.
+3. Discover and visualize the data to gain insights.
+4. Prepare the data for Machine Learning algorithms.
+5. Select a model and train it.
+6. Fine-tune your model.
+7. Present your solution.
+8. Launch, monitor, and maintain your system.
+First things first, you need to frame the problem: is it supervised, unsupervised, or Reinforcement Learning? Is it a classification task, a regression task, or something else? Before you read on, pause and try to answer these questions yourself.
+Have you found the answers? If not, don’t worry, we will go through them soon. But first, you need to take a step back and look at the big picture.
+1. Look at the Big Picture
+Welcome to Machine Learning Housing Corp.! Your first task is to use California census data to build a model of housing prices in the state. This data includes metrics such as
+
+Figure 2-17. A model deployed as a web service and used by a web application
+Another popular strategy is to deploy your model on the cloud, for example on Goo‐ gle Cloud AI Platform (formerly known as Google Cloud ML Engine): just save your model using joblib and upload it to Google Cloud Storage (GCS), then head over to Google Cloud AI Platform and create a new model version, pointing it to the GCS file. That’s it! This gives you a simple web service that takes care of load balancing and scaling for you. It takes JSON requests containing the input data (e.g., of a district) and returns JSON responses containing the predictions. You can then use this web service in your website (or whatever production environment you are using). As we will see in Chapter 19, deploying TensorFlow models on AI Platform is not much dif‐ ferent from deploying Scikit-Learn models.
+But deployment is not the end of the story. You also need to write monitoring code to check your system’s live performance at regular intervals and trigger alerts when it drops. This could be a steep drop, likely due to a broken component in your infra‐ structure, but be aware that it could also be a gentle decay that could easily go unno‐ ticed for a long time. This is quite common because models tend to “rot” over time: indeed, the world changes, so if the model was trained with last year’s data, it may not be adapted to today’s data.
+
+23	In a nutshell, a REST (or RESTful) API is an HTTP-based API that follows some conventions, such as using standard HTTP verbs to read, update, create, or delete resources (GET, POST, PUT, and DELETE) and using JSON for the inputs and outputs.
+ 
+Even a model trained to classify pictures of cats and dogs may need to be retrained regularly, not because cats and dogs will mutate overnight, but because cameras keep changing, along with image formats, sharpness, brightness, and size ratios. Moreover, people may love different breeds next year, or they may decide to dress their pets with tiny hats—who knows?
+
+You need to monitor your model's live performance. But how do you do that? Well, it depends. In some cases, the model's performance can be inferred from downstream metrics. For example, if your model is part of a recommender system and it suggests products that users may be interested in, then it's easy to monitor the number of recommended products sold each day. If this number drops compared to non-recommended products, then the prime suspect is the model. This could be due to a broken data pipeline or the need for the model to be retrained on fresh data. However, it's not always possible to determine the model's performance without human analysis.
+
+For instance, suppose you trained an image classification model to detect product defects on a production line. How can you get an alert if the model's performance drops, before thousands of defective products get shipped to your clients? One solution is to send a sample of all the pictures that the model classified (especially those that it wasn't so sure about) to human raters. Depending on the task, these raters may need to be experts, or they could be nonspecialists such as workers on a crowdsourcing platform or even the users themselves responding through surveys or repurposed captchas. Either way
+
+A captcha is a test to ensure a user is not a robot. These tests have often been used as a cheap way to label training data.
+
+Write another script that will evaluate both the new model and the previous model on the updated test set, and deploy the model to production if the performance has not decreased (if it did, make sure you investigate why).
+You should also make sure you evaluate the model's input data quality. Sometimes performance will degrade slightly because of a poor-quality signal (e.g., a malfunctioning sensor sending random values, or another team's output becoming stale), but it may take a while before your system's performance degrades enough to trigger an alert. If you monitor your model's inputs, you may catch this earlier. For example, you could trigger an alert if more and more inputs are missing a feature, or if its mean or standard deviation drifts too far from the training set, or a categorical feature starts containing new categories.
+Finally, make sure you keep backups of every model you create and have the process and tools in place to roll back to a previous model quickly, in case the new model starts failing badly for some reason. Having backups also makes it possible to easily compare new models with previous ones. Similarly, you should keep backups
+
+You may want to create several subsets of the test set in order to evaluate how well your model performs on specific parts of the data. For example, you may want to have a subset containing only the most recent data, or a test set for specific kinds of inputs (e.g., districts located inland versus districts located near the ocean). This will give you a deeper understanding of your model’s strengths and weaknesses.
+
+Introduction
+Welcome to the exciting world of Machine Learning! In this chapter, we will take a tour of a typical Machine Learning project. We will go through all the steps, from acquiring the data to deploying a trained model. We will also cover some of the main tools and techniques used in Machine Learning, such as data preprocessing, model training, and hyperparameter tuning. By the end of this chapter, you will have a good understanding of the Machine Learning process and be ready to start your own projects.
+
+The Housing Dataset
+To illustrate the various concepts and techniques in Machine Learning, we will use a dataset from the California Housing Prices from the 1990 Census. This dataset has information on the median house prices in different districts in California, along with other relevant information such as population, median income, and location.
+
+The Machine Learning Process
+Before we dive into the details, let's take a moment to look at the big picture of a Machine Learning project. The process can be broken down into seven main steps:
+
+1. Gathering Data: The first step in any Machine Learning project is to gather the data you will use to train your model. This can include acquiring data from various sources, such as databases, APIs, or scraping websites.
+
+2. Preparing the Data:
+
+
+

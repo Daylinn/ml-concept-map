@@ -1,0 +1,1496 @@
+Chapter 1
+    cross-validation
+    agents
+    clustering algorithms
+    hierarchical clustering algorithms
+    importance of data over
+    supervised learning
+    unsupervised learning
+    visualization algorithms
+    anomaly detection
+    restricted Boltzmann machines
+    RBMs
+    association rule learning
+    attributes
+    batch learning
+    Better Life Index
+    causal models
+    classification MLPs
+    corpus development
+    data mismatch
+    importance of over algorithms
+    noisy data
+    deep belief networks
+    DBNs
+    overfitting
+    development sets
+    dev sets
+    feature engineering
+    feature extraction
+    feature selection
+    features
+    final trained models
+    fitness functions
+    fully-specified model architecture
+    generalization error
+    hold outs
+    holdout validation
+    hyperparameters
+    hyperparameter tuning
+    learning rate
+    incremental learning
+    inference
+    instance-based learning
+    k-Nearest Neighbors regression
+    labels
+    linear models
+    classification with
+    Machine Learning
+    ML
+    testing and validating
+    measure of similarity
+    mini-batches
+    model parameters
+    model selection
+    model-based learning
+    training
+    No Free Lunch
+    NFL
+    novelty detection
+    offline learning
+    online learning
+    Optical Character Recognition
+    OCR
+    out-of-core learning
+    out-of-sample error
+    penalties
+    policies
+    prediction problems
+    regression problems
+    regularization
+    Reinforcement Learning
+    RL
+    responsibilities
+    clustering
+    rewards
+    sampling bias
+    sampling noise
+    linear model
+    semi-supervised learning
+    spam filters
+    test sets
+    train-dev sets
+    training data
+    irrelevant features
+    nonrepresentative
+    poor quality
+    underfitting
+    training instances
+    training samples
+    training sets
+    algorithms covered
+    common tasks
+    utility functions
+    validation sets
+
+Chapter 2
+    cross-validation
+    evaluating
+    average absolute deviation
+    California Housing Prices dataset
+    MNIST dataset
+    components
+    correlation coefficient
+    mean absolute error
+    MAE
+    downloading
+    geographical data
+    data preparation
+    custom transformers
+    data cleaning
+    feature scaling
+    handling text and categorical attributes
+    transformation pipelines
+    data snooping bias
+    attribute combinations
+    computing correlations
+    test training and exploration sets
+    duck typing
+    dummy attributes
+    embedding
+    estimators
+    Euclidean norm
+    data downloading
+    data visualization
+    framing the problem
+    launching monitoring and maintaining
+    Machine Learning project checklist
+    model fine-tuning
+    model selection and training
+    project goals
+    selecting performance measure
+    verifying assumptions
+    exploration sets
+    folds
+    histograms
+    hyperparameter tuning
+    isolated environments
+    K-fold cross-validation
+    labels
+    Machine Learning
+    ML
+    Manhattan norm
+    RMSE
+    min-max scaling
+    model selection
+    fine-tuning
+    training
+    multiple regression problems
+    multivariate regression problems
+    normalization
+    dense arrays
+    installing
+    serializing large arrays
+    one-hot encoding
+    one-hot vectors
+    Pearson's r
+    pipelines
+    predictors
+    univariate regression problems
+    representation learning
+    Root Mean Square Error
+    converting text to numbers
+    dataset dictionary structure
+    design principles
+    GridSearchCV
+    K-fold cross-validation feature
+    mean_squared_error function
+    missing value handling
+    saving models
+    splitting datasets into subsets
+    stratified sampling
+    transformation sequences
+    transformers and
+    sparse matrix
+    standard correlation coefficient
+    standardization
+    tail-heavy histograms
+    deploying on AI platforms
+    test sets
+    example project
+    transformations
+    workspace creation
+
+Chapter 3
+    accuracy
+    cross-validation
+    area under the curve
+    AUC
+    binary classifiers
+    error analysis
+    multiclass classification
+    multilabel classification
+    multioutput classification
+    performance measures
+    confusion matrix
+    skewed datasets
+    decision function
+    F1 score
+    false positive rate
+    FPR
+    folds
+    Gradient Descent
+    GD
+    Stochastic Gradient Descent
+    harmonic mean
+    K-fold cross-validation
+    approaches to training
+    precision
+    recall
+    ROC curve
+    multinomial classifiers
+    randint() function
+    one-versus-all
+    OvA
+    one-versus-one
+    OvO
+    one-versus-the-rest
+    OvR
+    online learning
+    SGD
+    receiver operating characteristic
+    ROC
+    computing classifier metrics
+    cross_val_score() function
+    SGDClassifier class
+    sensitivity
+    training models
+    true negative rate
+    TNR
+    true positive rate
+    TPR
+
+Chapter 4
+    Logistic
+    sigmoid
+    argmax operator
+    Batch Gradient Descent
+    bias terms
+    bias/variance trade-off
+    calculus
+    large margin classification
+    linear SVM classification
+    closed-form solution
+    column vectors
+    convergence
+    convex function
+    cross-entropy loss
+    log loss
+    mean squared error
+    iris dataset
+    decision boundaries
+    computational complexity
+    early stopping
+    Elastic Net
+    epochs
+    feature vector
+    Full Gradient Descent
+    global minimum
+    Gradient Descent
+    GD
+    Mini-batch Gradient Descent
+    Stochastic Gradient Descent
+    learning rate
+    identity matrix
+    independent and identically distributed
+    IID
+    random initialization
+    intercept terms
+    Kullback–Leibler divergence
+    Lasso Regression
+    learning curves
+    learning schedules
+    linear algebra
+    Linear Regression model
+    approaches to training
+    Normal Equation
+    local minimum
+    log-odds
+    Logistic Regression
+    estimating probabilities
+    Softmax Regression
+    training and cost function
+    logit
+    RMSE
+    mini-batches
+    Multinomial Logistic Regression
+    normalized exponential
+    inv() function
+    SGD
+    parameter matrix
+    parameter space
+    parameter vector
+    partial derivatives
+    Polynomial Regression
+    Linear Regression
+    Ridge Regression
+    regularization terms
+    regularized linear models
+    Root Mean Square Error
+    linear regression
+    simulated annealing
+    Singular Value Decomposition
+    SVD
+    softmax function
+    subgradient vector
+    Support Vector Machines
+    SVMs
+    Tikhonov regularization
+    tolerance
+    feature vectors
+    parameter vectors
+    subgradient vectors
+
+Chapter 5
+    hard margin classification
+    nonlinear SVM classification
+    soft margin classification
+    constrained optimization
+    hinge loss
+    feature scaling
+    Decision Trees
+    training and visualizing
+    dual problem
+    Gaussian Radial Basis Function
+    RBF
+    hinge loss function
+    hyperplanes
+    kernel trick
+    kernelized SVM
+    kernels
+    landmarks
+    Levenshtein distance
+    liblinear library
+    libsvm library
+    Machine Learning
+    ML
+    margin violations
+    Mercer's conditions
+    Mercer's theorem
+    online SVMs
+    polynomial features
+    polynomial kernels
+    primal problem
+    Quadratic Programming
+    QP
+    Radial Basis Function
+    SVM regression
+    SVM classification classes
+    SVM models
+    tolerance hyperparameter
+    sigmoid kernel
+    similarity functions
+    slack variables
+    string kernels
+    string subsequence kernel
+    subderivatives
+    decision function and prediction
+    training objective
+    support vectors
+
+Chapter 6
+    CART training algorithm
+    greedy algorithms
+    binary trees
+    black box models
+    chi-squared test
+    Classification and Regression Tree
+    CART
+    voting classifiers
+    mean squared error
+    Decision Trees
+    computational complexity
+    estimating class probabilities
+    Gini impurity versus entropy
+    instability drawbacks
+    making predictions
+    regression tasks
+    regularization hyperparameters
+    Ensemble Learning
+    Random Forests
+    Ensemble methods
+    ensembles
+    entropy impurity measure
+    Gini impurity measure
+    impurity
+    information theory
+    instability
+    leaf nodes
+    majority-vote predictions
+    parametric versus nonparametric
+    white versus black box
+    nonparametric models
+    NP-Complete problem
+    null hypothesis
+    p-value
+    parametric models
+    prediction problems
+    pruning
+    hyperparameters for Decision Trees
+    root nodes
+    DecisionTreeRegressor class
+    max_depth hyperparameter
+    presorting data with
+    random_state hyperparameter
+    Shannon's information theory
+    statistical significance
+    training set rotation
+    white box models
+    wisdom of the crowd
+
+Chapter 7
+    AdaBoost
+    Adaptive Boosting
+    bagging and pasting
+    out-of-bag evaluation
+    blenders
+    Gradient Boosting
+    boosting
+    AdaBoost classifiers
+    Extra-Trees classifier
+    voting classifiers
+    dimensionality reduction
+    Decision Stumps
+    Random Forests
+    random patches and random subspaces
+    stacking
+    Extremely Randomized Trees ensemble
+    Gradient Boosted Regression Trees
+    GBRT
+    Gradient Tree Boosting
+    hard voting classifiers
+    high-dimensional training sets
+    hypothesis boosting
+    law of large numbers
+    majority-vote classifiers
+    meta learners
+    Extra-Trees
+    feature importance
+    shrinkage technique
+    residual errors
+    SAMME
+    Stagewise Additive Modeling using a Multiclass Exponential loss function
+    AdaBoost version
+    ExtraTreesClassifier class
+    feature importance scoring
+    GBRT ensemble training
+    incremental training
+    shrinkage
+    soft voting
+    stacked generalization
+    statistical mode
+    Stochastic Gradient Boosting
+    strong learners
+    training sets
+    weak learners
+    XGBoost
+
+Chapter 8
+    isomap algorithm
+    Randomized PCA algorithm
+    unsupervised learning
+    compression
+    curse of dimensionality
+    compressing
+    decompressing
+    reconstruction error
+    reducing dimensionality
+    dimensionality reduction
+    decompression
+    LLE
+    Locally Linear Embedding
+    PCA
+    Principal Component Analysis
+    explained variance ratio
+    feature maps
+    feature space
+    Incremental PCA
+    IPCA
+    inverse transformation
+    Kernel PCA
+    kPCA
+    kernel trick
+    kernels
+    Linear Discriminant Analysis
+    LDA
+    manifold assumption
+    manifold hypothesis
+    Manifold Learning
+    Multidimensional Scaling
+    MDS
+    nonlinear dimensionality reduction
+    NLDR
+    array_split() function
+    memmap class
+    svd() function
+    original space
+    choosing dimension number
+    for compression
+    incremental
+    preserving variance
+    principal component axis
+    projecting down to d dimensions
+    randomized
+    pre-images
+    projection
+    random projections
+    Randomized PCA
+    reconstruction pre-images
+    automatic reconstruction with
+    full SVD approach
+    IncrementalPCA class
+    KernelPCA class
+    PCAng
+    Singular Value Decomposition
+    SVD
+    subspace
+    t-Distributed Stochastic Neighbor Embedding
+    t-SNE
+    training instances
+    preserving
+
+Chapter 9
+    accelerated K-Means
+    active learning
+    affinity
+    affinity propagation
+    agglomerative clustering
+    Akaike information criterion
+    AIC
+    BIRCH algorithm
+    clustering algorithms
+    Expectation-Maximization
+    EM
+    for anomaly detection
+    Isolation Forest algorithm
+    K-Means algorithm
+    Lloyd–Forgy algorithm
+    Mean-Shift algorithm
+    one-class SVM algorithm
+    alpha channels
+    anomaly detection
+    using clustering
+    using Gaussian Mixtures
+    Bayesian Gaussian Mixture models
+    Bayesian information criterion
+    BIC
+    black box stochastic variational inference
+    BBSVI
+    categorical distribution
+    centroids
+    classification MLPs
+    additional algorithms
+    DBSCAN
+    for image segmentation
+    K-Means
+    for preprocessing
+    for semi-supervised learning
+    color segmentation
+    semantic segmentation
+    core instances
+    customer segmentation
+    analyzing through clustering
+    preprocessing
+    density estimation
+    evidence lower bound
+    ELBO
+    expectation step
+    Fast-MCD
+    minimum covariance determinant
+    fraud detection
+    Gaussian mixture model
+    GMM
+    additional algorithms for anomaly and novelty detection
+    selecting cluster number
+    variants
+    hard clustering
+    Hierarchical DBSCAN
+    HDBSCAN
+    image segmentation
+    inertia
+    centroid initialization methods
+    inliers
+    instance segmentation
+    accelerated and mini-batch
+    hard and soft clustering
+    optimal cluster number
+    preprocessing with
+    proposed improvement to
+    scaling input features
+    label propagation
+    labels
+    latent variables
+    likelihood function
+    Lloyd-Forgy algorithm
+    Local Outlier Factor
+    LOF
+    maximization step
+    maximum a-posteriori
+    MAP
+    maximum likelihood estimate
+    MLE
+    mean field variational inference
+    mini-batch K-Means
+    novelty detection
+    observed variables
+    outlier detection
+    p
+    posterior
+    prior
+    anomaly and novelty detection
+    probability density function
+    PDF
+    recommender systems
+    responsibilities
+    clustering
+    search engines
+    silhouette coefficient
+    silhouette diagram
+    silhouette score
+    soft clustering
+    spectral clustering
+    theoretical information criterion
+    uncertainty sampling
+    Gaussian mixtures model
+    variational inference
+    variational parameters
+
+Chapter 10
+    hyperbolic tangent
+    tanh
+    Logistic
+    sigmoid
+    Rectified Linear Unit function
+    ReLU
+    softmax
+    softplus
+    fine-tuning hyperparameters
+    from biological to artificial neurons
+    implementing MLPs with Keras
+    artificial neurons
+    automatic differentiation
+    autodiff
+    AutoML
+    backpropagation
+    batch size
+    bias neurons
+    biological neural networks
+    BNN
+    biological neurons
+    break the symmetry
+    callbacks
+    chain rule
+    classification MLPs
+    image classifiers using Sequential APIs
+    multitask classification
+    connectionism
+    cross-entropy loss
+    log loss
+    mean absolute error
+    MAE
+    mean squared error
+    Fashion MNIST dataset
+    deep neural networks
+    DNNs
+    Deep Neuroevolution
+    dense layer
+    dynamic models
+    epochs
+    event files
+    Exclusive OR
+    XOR
+    feedforward neural networks
+    FNNs
+    forward pass
+    fully connected layer
+    Functional API
+    HDF5 format
+    Heaviside step function
+    Hebb's rule
+    Hebbian learning
+    hidden layers in MLPs
+    neurons per hidden layer
+    Huber loss
+    Hyperas
+    Hyperband
+    hyperbolic tangent function
+    Hyperopt
+    fine-tuning for neural networks
+    learning rate
+    Python libraries for optimization
+    image classification
+    using Sequential API
+    input layers
+    input neurons
+    complex architectures
+    implementing MLPs with
+    keras.callbacks package
+    loading datasets with
+    multibackend Keras
+    saving and restoring models
+    using code examples from keras.io
+    Keras Tuner
+    kopt library
+    dense
+    fully connected
+    hidden layer
+    input layer
+    output layer
+    logical computations
+    Microsoft Cognitive Toolkit
+    CNTK
+    complex using Functional API
+    dynamic using Subclassing API
+    saving and restoring
+    using callbacks
+    using TensorBoard for visualization
+    regression MLPs
+    multiple outputs
+    from biological to artificial
+    logical computations with
+    per hidden layer
+    nonsequential neural networks
+    installing
+    output layers
+    parameter efficiency
+    Perceptron
+    Perceptron convergence theorem
+    propositional logic
+    PyTorch library
+    regression MLPs using Sequential API
+    restoring models
+    reverse-mode autodiff
+    Perceptron class
+    Scikit-Optimize
+    TensorFlow
+    image classifiers
+    regression MLP
+    Sklearn-Deap
+    softmax function
+    softplus activation function
+    Spearmint library
+    step function
+    Subclassing API
+    summaries
+    symmetry breaking in backpropagation
+    Talos library
+    TensorBoard
+    TensorFlow Playground
+    PyTorch library and
+    tf.keras
+    tf.summary package
+    Theano
+    threshold logic unit
+    TLU
+    transfer learning
+    Wide & Deep neural networks
+
+Chapter 11
+    1cycle scheduling
+    exponential linear unit
+    ELU
+    Logistic
+    sigmoid
+    nonsaturating
+    Scaled Exponential Linear Unit
+    SELU
+    AdaGrad
+    Adam and Nadam optimization
+    adaptive learning rate
+    adaptive moment estimation
+    restricted Boltzmann machines
+    RBMs
+    Batch Normalization
+    BN
+    training sparse models
+    overfitting
+    default configuration
+    faster optimizers
+    reusing pretrained layers
+    vanishing/exploding gradients problems
+    dropout
+    dying ReLUs problem
+    exploding gradients problem
+    exponential scheduling
+    fan-in/fan-out numbers
+    first-order partial derivatives
+    Jacobians
+    Glorot and He initialization
+    gradient clipping
+    greedy layer-wise pretraining
+    He initialization
+    LeCun initialization
+    Xavier initialization
+    keep probability
+    implementing Batch Normalization with
+    implementing dropout
+    transfer learning with
+    reusing pretrained
+    leaky ReLU function
+    learning rate scheduling
+    learning schedules
+    max-norm regularization
+    momentum optimization
+    momentum vector
+    Monte Carlo
+    MC
+    Nesterov Accelerated Gradient
+    NAG
+    Nesterov momentum optimization
+    nonsaturating activation functions
+    normalization
+    creating faster
+    first- and second-order partial derivatives
+    RMSProp
+    avoiding through regularization
+    parametric leaky ReLU
+    PReLU
+    performance scheduling
+    piecewise constant scheduling
+    power scheduling
+    on auxiliary tasks
+    unsupervised pretraining
+    randomized leaky ReLU
+    RReLU
+    avoiding overfitting through
+    second-order partial derivatives
+    Hessians
+    self-normalization
+    self-supervised learning
+    skip connections
+    smoothing term
+    sparse models
+    TensorFlow Model Optimization Toolkit
+    TF-MOT
+    versions covered
+    TensorFlow custom models and training
+    implementing learning rate scheduling
+    tf.keras
+    transfer learning
+    wall time
+
+Chapter 12
+    accuracy
+    AutoGraphs
+    automatic differentiation
+    autodiff
+    computation graphs
+    mean squared error
+    activation functions initializers regularizers and constraints
+    computing gradients using Autodiff
+    layers
+    loss functions
+    losses and metrics
+    metrics
+    models
+    saving and loading
+    training loops
+    loading and preprocessing with TensorFlow
+    eager execution/eager mode
+    embedding
+    features
+    First In First Out
+    FIFO
+    graph mode
+    Huber loss
+    just-in-time
+    JIT
+    low-level API
+    kernels
+    see cost functions
+    locating papers on
+    custom with TensorFlow
+    using TensorFlow like
+    queues
+    ragged tensors
+    reconstruction loss
+    residual blocks
+    sets
+    sparse tensors
+    stateful metrics
+    streaming metrics
+    string tensors
+    symbolic tensors
+    tensor arrays
+    TensorFlow Hub
+    TensorFlow Lite
+    TensorFlow basics of architecture
+    benefits xvi
+    community support
+    getting help
+    library ecosystem
+    operating system compatibility
+    TensorFlow data loading and preprocessing
+    TensorFlow functions and graphs
+    AutoGraph and tracing
+    TF Function rules
+    tensors
+    rules
+    TPUs
+    tensor processing units
+    type conversions
+    variables
+
+Chapter 13
+    bag of words
+    encoding using embeddings
+    encoding using one-hot vectors
+    chaining transformations
+    helper function creation
+    prefetching
+    preprocessing
+    shuffling
+    using datasets with tf.Keras
+    TensorFlow Data API
+    prefetching data
+    preprocessing data
+    shuffling data
+    using datasets with tf.keras
+    datasets
+    embedding
+    embedding matrix
+    helper functions
+    preprocessing layers
+    lists of lists using SequenceExample Protobuf
+    memory bandwidth
+    CNNs
+    one-hot vectors
+    out-of-vocabulary
+    oov
+    pipelines
+    protocol buffers
+    protobufs
+    representation learning
+    SequenceExample protobuf
+    shuffling-buffer approach
+    TensorFlow Extended
+    TFX
+    Data API
+    preprocessing input features
+    TensorFlow Datasets
+    TFDS
+    TF Transform
+    TFRecord format
+    Term-Frequency × Inverse-Document-Frequency
+    TF-IDF
+    TF Datasets
+    tf.Transform
+    tf.keras
+    compressed TFRecord files
+    lists of lists using SequenceExample Proto‐buf
+    loading and parsing examples
+    TensorFlow protobufs
+    training/serving skew
+    chaining
+    vocabulary
+    voice recognition
+    word embeddings
+
+Chapter 14
+    softmax
+    adversarial learning
+    AlexNet
+    anchor boxes
+    autonomous driving systems
+    average pooling layer
+    Average Precision
+    AP
+    bottleneck layers
+    bounding box priors
+    classification and localization
+    color channels
+    convolution kernels
+    convolutional layer
+    filters
+    memory requirements
+    stacking multiple feature maps
+    TensorFlow implementation
+    architecture of visual cortex
+    CNN architectures
+    object detection
+    pooling layer
+    pretrained models for transfer learning
+    pretrained models from Keras
+    ResNet-34 using Keras
+    semantic segmentation
+    data augmentation
+    depth concat layer
+    depth radius
+    depthwise separable convolution
+    equivariance
+    feature maps
+    fully convolutional networks
+    FCNs
+    global average pooling layer
+    GoogLeNet
+    image generation
+    instance segmentation
+    invariance
+    implementing ResNet-34 with
+    using pretrained models from
+    LeNet-5
+    local response normalization
+    localization
+    Mask R-CNN
+    max pooling layer
+    mean Average Precision
+    mAP
+    mean average precision
+    RNNS
+    non-max suppression
+    You Only Look Once
+    YOLO
+    objectness output
+    pooling kernel
+    pretraining
+    models from Keras
+    recurrent neural networks
+    RNNs
+    Region Proposal Network
+    RPN
+    residual learning
+    residual units
+    ResNet
+    Residual Network
+    ResNet-34 CNN
+    SE block
+    SE-Inception
+    SE-ResNet
+    SENet
+    Squeeze-and-Excitation Network
+    separable convolution
+    sequences
+    shortcut connections
+    single-shot learning
+    skip connections
+    softmax function
+    stride
+    subsampling
+    convolution operations
+    convolutional layers
+    transfer learning
+    transposed convolutional layer
+    upsampling layer
+    VGGNet
+    WordTrees
+    Xception
+    Extreme Inception
+    zero padding
+    ZF Net
+
+Chapter 15
+    1D convolutional layers
+    recurrent
+    autoregressive integrated moving average
+    ARIMA
+    backpropagation through time
+    BPTT
+    basic cells
+    causal models
+    chatbots
+    mean squared error
+    decoders
+    differencing
+    encoders
+    Encoder–Decoder model
+    forecasting
+    forget gate
+    gate controllers
+    Gated Recurrent Unit
+    GRU
+    imputation
+    input and output sequences
+    input gate
+    Layer Normalization
+    1D convolutional layer
+    Logit Regression
+    see Logistic Regression
+    long sequences short-term memory problems
+    unstable gradients problem
+    Long Short-Term Memory
+    LSTM
+    memory cells
+    sequence-to-sequence models
+    training
+    multivariate time series
+    naive forecasting
+    natural language processing
+    NLP
+    recurrent neurons
+    output gate
+    peephole connections
+    forecasting time series
+    handling long sequences
+    recurrent neurons and layers
+    stateless and stateful
+    sequence-to-vector networks
+    handling long
+    input and output
+    short-term memory problems
+    time series data
+    baseline metrics
+    deep RNNS
+    forecasting several steps ahead
+    simple RNNs
+    time step
+    Turing test
+    univariate time series
+    unrolling the network through time
+    vector-to-sequence networks
+    WaveNet
+    weighted moving average model
+
+Chapter 16
+    softmax
+    additive attention
+    attention mechanism
+    explainability and
+    Transformer architecture
+    visual attention
+    autoencoders
+    Bahdanau attention
+    beam search
+    beam width
+    bidirectional recurrent layers
+    bidirectional RNNs
+    Byte-Pair Encoding
+    character RNNs
+    Char-RNNs
+    building and training
+    chopping sequential datasets
+    generating Shakespearean text
+    splitting sequential datasets
+    stateful RNNs and
+    training dataset creation
+    concatenative attention
+    conditional probability
+    loss functions
+    flat datasets
+    Google News 7B corpus
+    Internet Movie Database
+    nested datasets
+    dense vectors
+    dot product
+    Embedded Reber grammars
+    Encoder–Decoder model
+    end-of-sequence
+    EoS
+    entailment
+    explainability
+    StyleGANs
+    language models
+    latent representations
+    bidirectional recurrent layer
+    Masked Multi-Head Attention layer
+    Multi-Head Attention layer
+    Scaled Dot-Product Attention layer
+    see cost functions
+    mask tensors
+    masked language model
+    MLM
+    masking
+    modules
+    multiplicative attention
+    natural language processing
+    NLP
+    attention mechanisms
+    Encoder–Decoder network
+    generating text using character RNNs
+    sentiment analysis
+    neural machine translation
+    NMT
+    next sentence prediction
+    NSP
+    positional encodings
+    reusing pretrained embeddings
+    generating text using character RNNS
+    stateless and stateful
+    regular expressions
+    sampled softmax technique
+    self-attention mechanism
+    sentence encoders
+    softmax function
+    start of sequence
+    SoS
+    temperature
+    TensorFlow Addons
+    TensorFlow Hub
+    testing and validation
+    text generation
+    TF.Text library
+    tokenization
+    truncated backpropagation through time
+    word tokenization
+    zero-shot learning
+    ZSL
+
+Chapter 17
+    adaptive instance normalization
+    AdaIN
+    adversarial learning
+    affine transformations
+    autoencoders
+    convolutional
+    denoising
+    efficient data representations
+    generative
+    versus Generative Adversarial Networks
+    GANs
+    PCA with undercomplete linear autoencoders
+    probabilistic
+    recurrent
+    sparse
+    stacked
+    undercomplete
+    unsupervised pretraining using stacked
+    variational
+    Bayesian inference
+    convolutional autoencoders
+    mean squared error
+    Fashion MNIST dataset
+    visualizing Fashion MNIST Dataset
+    visualizing reconstructions
+    decoders
+    deep autoencoders
+    deep convolutional GANs
+    denoising autoencoders
+    discriminators
+    encoders
+    equalized learning rates
+    experience replay
+    Generative Adversarial Networks
+    DCGANs
+    difficulties of training
+    StyleGANs
+    generative autoencoders
+    generative network
+    generators
+    greedy layer-wise training
+    learning rate
+    stacked autoencoders
+    latent loss
+    minibatch standard deviation layer
+    linear autoencoders
+    mean coding
+    minibatch discrimination
+    mixing regularization
+    mode collapse
+    Nash equilibrium
+    normalization
+    overcomplete autoencoders
+    pattern matching
+    undercomplete linear autoencoders
+    pixelwise normalization layers
+    unsupervised pretraining
+    using stacked autoencoders
+    probabilistic autoencoders
+    recognition network
+    reconstruction loss
+    reconstructions
+    recurrent autoencoders
+    Reinforcement Learning
+    RL
+    semantic interpolation
+    sparse autoencoders
+    sparsity
+    sparsity loss
+    stacked denoising autoencoders
+    using Keras
+    style mixing
+    style transfer
+    tying weights
+    undercomplete autoencoders
+    pretraining using stacked autoencoders
+    variational autoencoders
+
+Chapter 18
+    A/B experiments
+    action advantage
+    action step
+    evaluating
+    exploiting versus exploring
+    Actor-Critic algorithms
+    Advantage Actor-Critic
+    A2C
+    Asynchronous Advantage Actor-Critic
+    A3C
+    Dueling DQN algorithm
+    genetic algorithms
+    off-policy algorithms
+    on-policy algorithms
+    Proximal Policy Optimization
+    PPO
+    REINFORCE algorithms
+    Soft Actor-Critic algorithm
+    Value Iteration algorithm
+    Approximate Q-Learning
+    Atari preprocessing
+    batched action step
+    batched time step
+    batched trajectory
+    Bellman Optimality Equation
+    boundary transitions
+    catastrophic forgetting
+    collect policy
+    mean squared error
+    credit assignment problem
+    curiosity-based exploration
+    training loops
+    datasets
+    Deep Q-Learning
+    Double DQN
+    Dueling DQN
+    fixed Q-Value targets
+    prioritized experience replay
+    deep Q-networks
+    DQNs
+    deques
+    discount factors
+    Double Dueling DQN
+    DQN agents
+    Dynamic Programming
+    exploration policy
+    importance sampling
+    IS
+    Markov chains
+    Markov Decision Processes
+    MDP
+    installing
+    observers
+    online model
+    OpenAI Gym
+    optimal state value
+    policies
+    policy gradients
+    PG
+    policy parameters
+    policy search
+    policy space
+    PER
+    Q-Learning
+    Approximate Q-Learning and Deep Q- Learning
+    implementing
+    Q-Value Iteration
+    Q-Values
+    queries per second
+    QPS
+    Rainbow agent
+    evaluating actions
+    neural network policies
+    optimizing rewards
+    Temporal Difference Learning
+    TF-Agents library
+    replay buffers
+    replay memory
+    sample inefficiency
+    simulated environments
+    state-action values
+    stochastic policy
+    target model
+    TD error
+    TD target
+    TD Learning
+    TensorFlow model deployment at scale
+    terminal state
+    collect driver
+    environment specifications
+    environment wrappers
+    environments
+    replay buffer and observer
+    training architecture
+    training metrics
+    trajectories
+    trajectory
+    undiscounted rewards
+
+Chapter 19
+    active constraint
+    AI Platform
+    AllReduce algorithm
+    dynamic placer algorithm
+    Boltzmann machines
+    Hopfield networks
+    restricted Boltzmann machines
+    RBMs
+    self-organizing maps
+    SOMs
+    associative memory networks
+    asynchronous updates
+    automatic differentiation
+    autodiff
+    bandwidth saturation
+    canary testing
+    cluster specification
+    Colab Runtime
+    Colaboratory
+    Colab
+    complementary slackness
+    Compute Unified Device Architecture library
+    CUDA
+    concrete functions
+    Contrastive Divergence
+    CUDA Deep Neural Network library
+    cuDNN
+    computing gradients using Autodiff
+    data parallelism
+    data preparation
+    deep belief networks
+    DBNs
+    Deep Learning VM Images
+    Distribution Strategies API
+    dual numbers
+    dual problem
+    embedded devices
+    energy function
+    data downloading
+    data visualization
+    framing the problem
+    launching monitoring and maintaining
+    Machine Learning project checklist
+    model fine-tuning
+    model selection and training
+    exercise solutions
+    fake quantization
+    finite difference approximation
+    forward-mode autodiff
+    function definitions
+    function graphs
+    generalized Lagrangian
+    prediction service creation
+    prediction service use
+    Google Cloud Storage
+    GCS
+    GPUs
+    graphics processing units
+    GPU-equipped virtual machines
+    managing GPU RAM
+    parallel execution across multiple devices
+    placing operations and variables on devices
+    selecting
+    speeding computations with
+    hidden units
+    inequality constraints
+    input signatures
+    inter-op thread pool
+    intra-op thread pool
+    JupyterLab
+    Karush–Kuhn–Tucker
+    KKT
+    Lagrange multipliers
+    logical GPU devices
+    manual differentiation
+    metagraphs
+    mirrored strategy
+    ML Engine
+    mobile devices
+    model parallelism
+    training across multiple devices
+    stochastic neurons
+    Newton's difference quotient
+    NVIDIA Collective Communications Library
+    NCCL
+    Nvidia GPU cards
+    parameter servers
+    post-training quantization
+    creating on GCP AI
+    quantization-aware training
+    queues
+    ragged tensors
+    reverse-mode autodiff
+    SavedModel format
+    service account
+    sets
+    spare replicas
+    sparse tensors
+    spurious patterns
+    stale gradients
+    stationary point
+    string tensors
+    symbolic differentiation
+    symbolic tensors
+    synchronous updates
+    temperature
+    tensor arrays
+    TensorFlow cluster
+    special data structures
+    AutoGraph and tracing
+    deploying to mobile and embedded devices
+    serving TensorFlow models
+    training models across multiple devices
+    using GPUs to speed computations
+    graphs generated by
+    thermal equilibrium
+    virtual GPU devices
+    visible units
+    warmup phase
+

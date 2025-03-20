@@ -1,0 +1,1463 @@
+1cycle scheduling, 361
+1D convolutional layers, 520
+A/B experiments, 667
+accelerated K-Means, 244
+accuracy, 90
+cross-validation, 89
+action advantage, 620
+action step, 656
+evaluating, 619
+exploiting versus exploring, 618
+exponential linear unit (ELU), 336-338
+hyperbolic tangent (tanh), 291
+Logistic (sigmoid), 143, 293, 302, 332
+nonsaturating, 335
+Rectified Linear Unit function (ReLU), 292-293
+Scaled Exponential Linear Unit (SELU), 334, 337-338, 368
+softmax, 294, 299, 470, 482, 488, 543
+softplus, 293
+active constraint, 762
+active learning, 255
+Actor-Critic algorithms, 625, 662
+AdaBoost, 200
+AdaGrad, 354
+Adam and Nadam optimization, 356
+Adaptive Boosting, 200
+adaptive instance normalization (AdaIN), 604
+adaptive learning rate, 355
+adaptive moment estimation, 356
+additive attention, 550
+Advantage Actor-Critic (A2C), 663
+adversarial learning, 495, 568
+affine transformations, 604
+affinity, 237
+affinity propagation, 259
+agents, 14
+agglomerative clustering, 258
+AI Platform, 680
+Akaike information criterion (AIC), 267
+AlexNet, 464
+Actor-Critic algorithms, 625, 662
+Advantage Actor-Critic (A2C), 663
+AllReduce algorithm, 705
+Asynchronous Advantage Actor-Critic (A3C), 662
+BIRCH algorithm, 259
+CART training algorithm, 177, 179
+clustering algorithms, 10
+Dueling DQN algorithm, 641
+dynamic placer algorithm, 697
+Expectation-Maximization (EM) algorithm, 262
+for anomaly detection, 274
+genetic algorithms, 612
+greedy algorithms, 180
+hierarchical clustering algorithms, 10
+importance of data over, 24
+Isolation Forest algorithm, 274
+isomap algorithm, 233
+K-Means algorithm, 238
+Lloyd–Forgy algorithm, 238
+Mean-Shift algorithm, 259
+off-policy algorithms, 632
+on-policy algorithms, 632
+one-class SVM algorithm, 275
+Proximal Policy Optimization (PPO), 663
+Randomized PCA algorithm, 225
+REINFORCE algorithms, 620
+Soft Actor-Critic algorithm, 663
+supervised learning, 7
+unsupervised learning, 9
+Value Iteration algorithm, 627
+visualization algorithms, 11
+AllReduce algorithm, 705
+alpha channels, 250
+anchor boxes, 490
+anomaly detection, 279, 236, 12
+using clustering, 237
+using Gaussian Mixtures, 266
+Approximate Q-Learning, 633
+area under the curve (AUC), 98
+argmax operator, 149
+Boltzmann machines, 775
+fine-tuning hyperparameters, 320-327
+from biological to artificial neurons, 280-295
+Hopfield networks, 773
+implementing MLPs with Keras, 295-320
+restricted Boltzmann machines (RBMs), 776
+self-organizing maps (SOMs), 780
+artificial neurons, 283
+association rule learning, 12
+associative memory networks, 773
+Asynchronous Advantage Actor-Critic (A3C), 662
+asynchronous updates, 707
+Atari preprocessing, 645
+attention mechanism, 526, 549
+explainability and, 553
+Transformer architecture, 554
+visual attention, 552
+attributes, 8
+autoencoders, 567, 569
+convolutional, 579
+denoising, 581
+efficient data representations, 569
+generative, 586
+versus Generative Adversarial Networks (GANs), 568
+PCA with undercomplete linear autoencoders, 570
+probabilistic, 586
+recurrent, 580
+sparse, 582
+stacked, 572-575
+undercomplete, 570
+unsupervised pretraining using stacked, 576-579
+variational, 586-591
+AutoGraphs, 407
+automatic differentiation (autodiff), 290, 399, 765-772
+AutoML, 323
+autonomous driving systems, 497
+autoregressive integrated moving average (ARIMA) models, 506
+average absolute deviation, 41
+average pooling layer, 459
+Average Precision (AP), 491
+backpropagation, 289-292
+backpropagation through time (BPTT), 502
+bag of words, 438
+bagging and pasting, 192
+out-of-bag evaluation, 195
+in Scikit-Learn, 194
+Bahdanau attention, 550
+bandwidth saturation, 708
+basic cells, 500
+Batch Gradient Descent, 121
+batch learning, 15
+Batch Normalization (BN), 339
+batch size, 325
+batched action step, 657
+batched time step, 657
+batched trajectory, 657
+Bayesian Gaussian Mixture models, 270
+Bayesian inference, 586
+Bayesian information criterion (BIC), 267
+beam search, 547
+beam width, 547
+Bellman Optimality Equation, 627
+Better Life Index, 19
+bias neurons, 285
+bias terms, 112
+bias/variance trade-off, 134
+bidirectional recurrent layers, 546
+bidirectional RNNs, 546
+binary classifiers, 88
+binary trees, 177
+biological neural networks (BNN), 282
+biological neurons, 280
+BIRCH algorithm, 259
+black box models, 178
+black box stochastic variational inference (BBSVI), 273
+blenders, 208
+Boltzmann machines, 775
+AdaBoost, 200
+Gradient Boosting, 203
+boosting, 199
+bottleneck layers, 467
+boundary transitions, 660
+bounding box priors, 490
+break the symmetry, 291
+Byte-Pair Encoding, 536
+calculus, 112
+California Housing Prices dataset, 36
+callbacks, 315
+canary testing, 684
+CART training algorithm, 177, 179
+catastrophic forgetting, 637
+categorical distribution, 261
+encoding using embeddings, 433
+encoding using one-hot vectors, 431
+causal models, 510
+centroids, 238
+chain rule, 290
+chaining transformations, 415
+character RNNs (Char-RNNs), 526
+building and training, 530
+chopping sequential datasets, 528
+generating Shakespearean text, 531
+splitting sequential datasets, 527
+stateful RNNs and, 532
+training dataset creation, 527
+chatbots, 525
+chi-squared test, 182
+Classification and Regression Tree (CART), 177, 179
+AdaBoost classifiers, 200
+binary classifiers, 88
+classification and localization, 483
+classification MLPs, 294, 10, 237
+error analysis, 102
+Extra-Trees classifier, 198
+hard margin classification, 154
+image classifiers using Sequential APIs, 297-307
+large margin classification, 153
+linear SVM classification, 153
+MNIST dataset, 85
+multiclass classification, 100
+multilabel classification, 106
+multioutput classification, 107
+multitask classification, 311
+nonlinear SVM classification, 157-162
+performance measures, 88-100
+soft margin classification, 154
+voting classifiers, 189
+closed-form solution, 114
+cluster specification, 711
+additional algorithms, 258
+DBSCAN, 255
+for image segmentation, 238, 249
+K-Means, 238-249, 236
+for preprocessing, 251
+for semi-supervised learning, 253
+Colab Runtime, 693
+Colaboratory (Colab), 693
+collect policy, 649
+color channels, 451
+color segmentation, 249
+column vectors, 113
+complementary slackness, 762
+components, 38
+compression, 224
+computation graphs, 376
+Compute Unified Device Architecture library (CUDA), 690
+concatenative attention, 550
+concrete functions, 791
+conditional probability, 547
+confusion matrix, 90
+connectionism, 280
+constrained optimization, 166
+Contrastive Divergence, 777
+convergence, 118
+convex function, 120
+convolution kernels, 450
+convolutional autoencoders, 579
+convolutional layer, 448
+filters, 450
+memory requirements, 456
+stacking multiple feature maps, 451
+TensorFlow implementation, 453
+architecture of visual cortex, 446
+classification and localization, 483
+CNN architectures, 460-478
+convolutional layer, 448-456
+object detection, 485-492
+pooling layer, 456
+pretrained models for transfer learning, 481
+pretrained models from Keras, 479
+ResNet-34 using Keras, 478
+semantic segmentation, 492
+core instances, 255
+corpus development, 24
+correlation coefficient, 58
+cross-entropy loss (log loss), 149
+hinge loss, 155, 173
+mean absolute error (MAE), 41, 293
+mean squared error, 120, 293, 308, 384, 570, 573, 583, 636
+credit assignment problem, 619
+cross-entropy loss (log loss), 149, 295
+cross-validation, 31, 73, 89
+CUDA Deep Neural Network library (cuDNN), 690
+curiosity-based exploration, 664
+curse of dimensionality, 214
+activation functions, initializers, regularizers, and constraints, 387
+computing gradients using Autodiff, 399, 765-772
+layers, 391
+loss functions, 384
+losses and metrics, 397
+metrics, 388
+models, 394
+saving and loading, 385
+training loops, 402
+customer segmentation, 237
+analyzing through clustering, 237
+California Housing Prices dataset, 36
+chopping sequential datasets, 528
+compressing, 224
+data mismatch, 32
+decompressing, 224
+downloading, 46
+efficient data representations, 569
+Fashion MNIST dataset, 297, 574, 590
+flat datasets, 529
+geographical data, 56
+Google News 7B corpus, 541
+helper function creation, 420
+importance of over algorithms, 24
+Internet Movie Database, 534
+iris dataset, 145
+loading and preprocessing with TensorFlow, 413-442
+MNIST dataset, 85
+nested datasets, 529
+noisy data, 19
+prefetching, 421
+preprocessing, 251, 419, 430-439
+reconstruction error, 224
+reducing dimensionality, 222
+shuffling, 416
+skewed datasets, 90
+splitting sequential datasets, 527
+training dataset creation, 527
+training sparse models, 359
+using datasets with tf.Keras, 423
+chaining transformations, 415
+helper function creation, 420
+TensorFlow Data API, 414
+prefetching data, 421
+preprocessing data, 419
+shuffling data, 416
+using datasets with tf.keras, 423
+data augmentation, 464
+data parallelism, 701, 704
+data preparation, 62
+custom transformers, 68
+data cleaning, 63
+feature scaling, 69
+handling text and categorical attributes, 65
+transformation pipelines, 70
+data snooping bias, 51
+attribute combinations, 61
+computing correlations, 58
+dimensionality reduction, 213
+geographical data, 56
+test, training, and exploration sets, 56
+visualizing Fashion MNIST Dataset, 574
+visualizing reconstructions, 574
+datasets, 414
+DBSCAN, 255
+decision boundaries, 145
+decision function, 93
+Decision Stumps, 203
+Decision Trees, 175
+CART training algorithm, 179
+computational complexity, 180
+estimating class probabilities, 178
+evaluating, 73
+Gini impurity versus entropy, 180
+instability drawbacks, 185
+making predictions, 176
+regression tasks, 183
+regularization hyperparameters, 181
+training and visualizing, 175
+decoders, 501, 569
+decompression, 224
+deep autoencoders, 572
+deep belief networks (DBNs), 13, 777
+deep convolutional GANs, 598
+Deep Learning VM Images, 692
+deep neural networks (DNNs), 289, 331
+overfitting, 364-371
+default configuration, 371
+faster optimizers, 351-364
+reusing pretrained layers, 345-351
+vanishing/exploding gradients problems, 332-345
+Deep Neuroevolution, 323
+Deep Q-Learning, 633, 639, 634
+Double DQN, 640
+Dueling DQN, 641
+fixed Q-Value targets, 639
+prioritized experience replay, 640
+deep Q-networks (DQNs), 633, 650, 650
+denoising autoencoders, 581
+dense layer, 285
+dense vectors, 556
+density estimation, 236, 264
+depth concat layer, 467
+depth radius, 466
+depthwise separable convolution, 474
+deques, 635
+development sets (dev sets), 31
+differencing, 506
+dimensionality reduction, 215-218
+curse of dimensionality, 214
+LLE (Locally Linear Embedding), 230
+PCA (Principal Component Analysis), 219-230
+discount factors, 619
+discriminators, 568
+Distribution Strategies API, 668, 709
+dot product, 551
+Double DQN, 640
+Double Dueling DQN, 642
+DQN agents, 652
+dropout, 365
+dual numbers, 768
+dual problem, 168, 761
+duck typing, 68
+Dueling DQN algorithm, 641
+dummy attributes, 67
+dying ReLUs problem, 335
+dynamic models, 313
+dynamic placer algorithm, 697
+Dynamic Programming, 628
+eager execution/eager mode, 408
+early stopping, 141
+Elastic Net, 140
+ELU (exponential linear unit), 336-338
+embedded devices, 685
+Embedded Reber grammars, 566
+embedding, 68, 413, 433
+embedding matrix, 435
+encoders, 501, 569
+Encoder–Decoder model, 501, 542-548
+end-of-sequence (EoS) token, 542, 556
+energy function, 774
+Ensemble Learning, 189
+bagging and pasting, 192-196
+boosting, 199-208
+Random Forests, 189, 197
+random patches and random subspaces, 196
+stacking, 208
+voting classifiers, 189
+Ensemble methods, 189
+ensembles, 189
+entailment, 564
+entropy impurity measure, 180
+epochs, 125, 290
+equalized learning rates, 603
+equivariance, 458
+error analysis, 102
+estimators, 64
+Euclidean norm, 41
+event files, 317
+evidence lower bound (ELBO), 272
+data downloading, 42-55, 756
+data preparation, 62-72, 757
+data visualization, 56-62, 756
+framing the problem, 37, 755
+launching, monitoring, and maintaining, 80, 759
+Machine Learning project checklist, 37, 755
+model fine-tuning, 75-80, 758
+model selection and training, 72, 758
+project goals, 37
+selecting performance measure, 39
+verifying assumptions, 42
+Exclusive OR (XOR) classification problem, 288
+exercise solutions, 719-753
+expectation step, 262
+Expectation-Maximization (EM) algorithm, 262
+experience replay, 597
+explainability, 553
+explained variance ratio, 222
+exploding gradients problem, 332
+exploration policy, 630, 632
+exploration sets, 56
+exponential linear unit (ELU), 336-338
+exponential scheduling, 360
+Extra-Trees classifier, 198
+Extremely Randomized Trees ensemble, 198
+F1 score, 92
+fake quantization, 687
+false positive rate (FPR), 97
+fan-in/fan-out numbers, 333
+Fashion MNIST dataset, 297, 574, 590
+Fast-MCD (minimum covariance determinant), 274
+feature engineering, 27
+feature extraction, 12, 27
+feature maps, 228, 450
+feature scaling, 69
+feature selection, 27
+feature space, 226
+feature vector, 113
+features, 8
+feedforward neural networks (FNNs), 289
+filters, 450
+final trained models, 20
+finite difference approximation, 766
+First In, First Out (FIFO) queues, 384
+first-order partial derivatives (Jacobians), 358
+fitness functions, 20
+fixed Q-Value targets, 639
+flat datasets, 529
+folds, 73, 89
+forecasting, 503
+forget gate, 516
+forward pass, 290
+forward-mode autodiff, 767
+fraud detection, 237
+Full Gradient Descent, 122
+fully connected layer, 285
+fully convolutional networks (FCNs), 487
+fully-specified model architecture, 20
+function definitions, 792
+function graphs, 792
+Functional API, 308-313
+gate controllers, 516
+Gated Recurrent Unit (GRU) cell, 518
+Gaussian mixture model (GMM), 260, 266
+additional algorithms for anomaly and novelty detection, 274
+Bayesian Gaussian Mixture models, 270
+selecting cluster number, 267
+variants, 260
+Gaussian Radial Basis Function (RBF), 159
+generalization error, 30
+generalized Lagrangian, 762
+Generative Adversarial Networks (GANs) versus autoencoders, 568
+deep convolutional GANs (DCGANs), 598
+difficulties of training, 596
+StyleGANs, 604
+generative autoencoders, 586
+generative network, 569
+generators, 568
+genetic algorithms, 612
+Gini impurity measure, 180
+global average pooling layer, 460
+global minimum, 119
+Glorot and He initialization, 333
+prediction service creation, 677-681
+prediction service use, 682-685
+Google Cloud Storage (GCS), 679
+Google News 7B corpus, 541
+GoogLeNet, 466
+GPUs (graphics processing units) adding to single machines, 689
+Colaboratory (Colab), 693
+GPU-equipped virtual machines, 692
+managing GPU RAM, 694
+parallel execution across multiple devices, 699
+placing operations and variables on devices, 697
+selecting, 690
+speeding computations with, 689
+Gradient Boosted Regression Trees (GBRT), 203
+Gradient Boosting, 203
+gradient clipping, 345
+Gradient Descent (GD), 111, 118
+Batch Gradient Descent, 121
+Mini-batch Gradient Descent, 127
+Stochastic Gradient Descent, 124
+Gradient Tree Boosting, 203
+graph mode, 408
+greedy algorithms, 180
+greedy layer-wise pretraining, 349
+greedy layer-wise training, 578
+hard clustering, 240
+hard margin classification, 154
+hard voting classifiers, 190
+harmonic mean, 92
+HDF5 format, 314
+He initialization, 333
+Heaviside step function, 285
+Hebb's rule, 286
+Hebbian learning, 287
+helper functions, 420
+hidden layers in MLPs, 289
+neurons per hidden layer, 324
+hidden units, 775
+hierarchical clustering algorithms, 10
+Hierarchical DBSCAN (HDBSCAN), 258
+high-dimensional training sets, 213
+hinge loss function, 155, 173
+histograms, 50
+hold outs, 31
+holdout validation, 31
+Hopfield networks, 773
+Huber loss, 293, 384
+Hyperas, 322
+Hyperband, 323
+hyperbolic tangent function (tanh), 291
+Hyperopt, 322
+hyperparameters, 29
+fine-tuning for neural networks, 320-327
+hyperparameter tuning, 31, 75
+learning rate, 118
+Python libraries for optimization, 322
+regularization hyperparameters, 181
+hyperplanes, 165
+hypothesis boosting, 199
+identity matrix, 137
+image classification, 311
+using Sequential API, 297-307
+image generation, 495
+image segmentation, 238, 249
+importance sampling (IS), 640
+impurity, 177, 180
+imputation, 503
+incremental learning, 16
+Incremental PCA (IPCA), 225
+independent and identically distributed (IID), 126
+inequality constraints, 762
+inertia, 243
+inference, 23
+information theory, 180
+centroid initialization methods, 243
+Glorot and He initialization, 333
+LeCun initialization, 334
+random initialization, 118
+Xavier initialization, 333
+inliers, 266
+input and output sequences, 501
+input gate, 516
+input layers, 289
+input neurons, 285
+input signatures, 791
+instability, 185
+instance segmentation, 249, 495
+instance-based learning, 17, 22
+inter-op thread pool, 699
+intercept terms, 112
+Internet Movie Database, 534
+intra-op thread pool, 699
+invariance, 457
+inverse transformation, 225
+iris dataset, 145
+isolated environments, 43
+Isolation Forest algorithm, 274
+isomap algorithm, 233
+JupyterLab, 692
+just-in-time (JIT) compiler, 376
+K-fold cross-validation, 73, 89
+K-Means, 238, 248
+accelerated and mini-batch, 244
+centroid initialization methods, 243
+hard and soft clustering, 240
+image segmentation, 249
+K-Means algorithm, 241
+optimal cluster number, 245
+preprocessing with, 251
+proposed improvement to, 243
+scaling input features, 249
+for semi-supervised learning, 253
+k-Nearest Neighbors regression, 22
+Karush–Kuhn–Tucker (KKT) multipliers, 762
+keep probability, 367
+complex architectures, 314
+gradient clipping, 345
+implementing Batch Normalization with, 341
+implementing dropout, 367
+implementing MLPs with, 295-320
+implementing ResNet-34 with, 478
+keras.callbacks package, 316
+loading datasets with, 297
+low-level API, 381
+multibackend Keras, 295
+preprocessing layers, 437
+saving and restoring models, 314
+stacked autoencoders, 572
+transfer learning with, 347
+using code examples from keras.io, 300
+using pretrained models from, 479
+Keras Tuner, 322
+Kernel PCA (kPCA), 226-230
+kernel trick, 158, 228
+kernelized SVM, 169
+kernels, 170, 226, 377
+kopt library, 322
+Kullback–Leibler divergence, 150
+label propagation, 254
+labels, 7, 39, 239
+Lagrange multipliers, 761
+landmarks, 159
+language models, 563
+large margin classification, 153
+Lasso Regression, 137
+latent loss, 587
+latent representations, 567
+latent variables, 262
+law of large numbers, 191
+Layer Normalization, 512
+1D convolutional layer, 520
+adaptive instance normalization (AdaIN), 604
+bidirectional recurrent layer, 546
+convolutional layer, 448-456
+dense (fully connected) layer, 285
+hidden layer, 289
+input layer, 289
+Masked Multi-Head Attention layer, 556
+minibatch standard deviation layer, 603
+Multi-Head Attention layer, 556, 559
+output layer, 289
+pooling layer, 456
+recurrent, 498-502
+reusing pretrained, 345-351
+Scaled Dot-Product Attention layer, 559
+leaf nodes, 176
+leaky ReLU function, 335
+learning curves, 130-134
+learning rate, 16, 118, 325, 603
+learning rate scheduling, 359
+learning schedules, 125, 360
+LeCun initialization, 334
+LeNet-5, 463
+Levenshtein distance, 161
+liblinear library, 162
+libsvm library, 162
+likelihood function, 267
+linear algebra, 112
+linear autoencoders, 570
+Linear Discriminant Analysis (LDA), 233
+linear models, 19
+Linear Regression model, 112
+approaches to training, 111, 113
+computational complexity, 117
+Normal Equation, 114
+linear SVM classification, 153
+lists of lists, using SequenceExample Protobuf, 429
+LLE (Locally Linear Embedding), 230
+Lloyd-Forgy algorithm, 238
+local minimum, 119
+Local Outlier Factor (LOF), 274
+local response normalization, 465
+localization, 483
+log loss, 144
+log-odds, 144
+logical computations, 283
+logical GPU devices, 695
+Logistic (sigmoid) function, 143, 293-294, 302, 332
+Logistic Regression, 142
+classification with, 8
+decision boundaries, 145
+estimating probabilities, 143
+Softmax Regression, 148
+training and cost function, 144
+logit, 144
+Logit Regression (see Logistic Regression), 511
+long sequences short-term memory problems, 514-523
+unstable gradients problem, 512
+Long Short-Term Memory (LSTM) cell, 514
+loss functions (see cost functions) Luong attention, 551
+Machine Learning (ML), 5, 30, 2, 23-30, 40, 164
+locating papers on, 378
+testing and validating, 30-33
+Machine Learning project checklist, 37, 755
+majority-vote classifiers, 190
+majority-vote predictions, 187
+Manhattan norm, 41
+manifold assumption, 218
+manifold hypothesis, 218
+Manifold Learning, 218
+manual differentiation, 765
+margin violations, 155
+Markov chains, 625
+Markov Decision Processes (MDP), 625-629
+Mask R-CNN, 495
+mask tensors, 539
+masked language model (MLM), 564
+Masked Multi-Head Attention layer, 556
+masking, 538
+max pooling layer, 457
+max-norm regularization, 370
+maximization step, 262
+maximum a-posteriori (MAP) estimation, 269
+maximum likelihood estimate (MLE), 269
+mean absolute error (MAE), 41
+mean Average Precision (mAP), 491
+mean coding, 586
+mean field variational inference, 273
+Mean-Shift algorithm, 259
+measure of similarity, 18
+memory bandwidth, 422
+memory cells, 500
+Mercer's conditions, 171
+Mercer's theorem, 171
+meta learners, 208
+metagraphs, 671
+accuracy, 388
+area under the curve (AUC), 98
+confusion matrix, 90, 90
+F1 score, 92
+mean absolute error (MAE), 41, 293
+mean average precision, 491
+mean squared error, 183, 505
+precision, 91-97
+recall, 91-97
+RMSE, 39
+ROC curve, 97
+Microsoft Cognitive Toolkit (CNTK), 295
+min-max scaling, 69
+Mini-batch Gradient Descent, 127
+mini-batch K-Means, 244
+mini-batches, 15, 127
+minibatch discrimination, 597
+minibatch standard deviation layer, 603
+mirrored strategy, 704
+mixing regularization, 606
+ML Engine, 680
+MNIST dataset, 85
+mobile devices, 685
+mode collapse, 597
+model parallelism, 701
+model parameters, 20
+model selection, 19, 31, 72
+model-based learning, 18
+causal models, 510, 20
+complex using Functional API, 308-313
+custom with TensorFlow, 384-405
+dynamic using Subclassing API, 313
+fine-tuning, 75-80
+parametric versus nonparametric, 181
+pretrained models for transfer learning, 481
+pretrained models from Keras, 479
+saving and restoring, 314
+sequence-to-sequence models, 510
+training, 20, 72
+training across multiple devices, 701-717
+training sparse models, 359
+using callbacks, 315
+using TensorBoard for visualization, 317
+white versus black box, 178
+modules, 540
+momentum optimization, 351
+momentum vector, 352
+Monte Carlo (MC) dropout, 368
+Multi-Head Attention layer, 556, 559
+multibackend Keras, 295
+multiclass classification, 100
+Multidimensional Scaling (MDS), 232
+multilabel classification, 106
+backpropagation, 289-292
+classification MLPs, 294
+regression MLPs, 292
+multinomial classifiers, 100
+Multinomial Logistic Regression, 148
+multioutput classification, 107
+multiple outputs, 311
+multiple regression problems, 39
+multiplicative attention, 551
+multitask classification, 311
+multivariate regression problems, 39
+multivariate time series, 503
+naive forecasting, 505
+Nash equilibrium, 596
+natural language processing (NLP), 525, 563
+attention mechanisms, 549-563
+CNNs, 445
+Encoder–Decoder network, 542-548
+generating text using character RNNs, 526-534
+RNNS, 497
+sentiment analysis, 534-542
+nested datasets, 529
+Nesterov Accelerated Gradient (NAG), 353
+Nesterov momentum optimization, 353
+neural machine translation (NMT), 542-563
+bias neurons, 285
+fan-in/fan-out numbers, 333
+from biological to artificial, 280-295
+input neurons, 285
+logical computations with, 283
+per hidden layer, 324
+recurrent neurons, 498-502
+stochastic neurons, 775
+Newton's difference quotient, 766
+next sentence prediction (NSP), 565
+No Free Lunch (NFL) theorem, 33
+noisy data, 19
+non-max suppression, 486
+nonlinear dimensionality reduction (NLDR), 230
+nonlinear SVM classification, 157-162
+nonparametric models, 181
+nonsaturating activation functions, 335
+nonsequential neural networks, 308
+Normal Equation, 114
+normalization, 69, 339, 603
+normalized exponential, 148
+novelty detection, 12, 267, 274
+NP-Complete problem, 180
+null hypothesis, 182
+array_split() function, 226
+dense arrays, 67
+installing, 42
+inv() function, 115
+memmap class, 226
+randint() function, 107
+serializing large arrays, 75
+svd() function, 221
+using TensorFlow like, 379-384
+NVIDIA Collective Communications Library (NCCL), 710
+Nvidia GPU cards, 690
+object detection, 485
+fully convolutional networks (FCNs), 487
+You Only Look Once (YOLO), 489
+objectness output, 486
+observed variables, 262
+observers, 654
+off-policy algorithms, 632
+offline learning, 15
+on-policy algorithms, 632
+one-class SVM algorithm, 275
+one-hot encoding, 67
+one-hot vectors, 431
+one-versus-all (OvA) strategy, 100
+one-versus-one (OvO) strategy, 100
+one-versus-the-rest (OvR) strategy, 100
+online learning, 15, 88
+online model, 639
+online SVMs, 172
+OpenAI Gym, 613-617
+Optical Character Recognition (OCR), 1
+optimal state value, 627
+AdaGrad, 354
+Adam and Nadam optimization, 356
+creating faster, 351
+first- and second-order partial derivatives, 358
+learning rate scheduling, 359
+momentum optimization, 351
+Nesterov Accelerated Gradient (NAG), 353
+RMSProp, 355
+Stochastic Gradient Descent (SGD), 88, 124
+original space, 226
+out-of-core learning, 16
+out-of-sample error, 30
+out-of-vocabulary (oov) buckets, 432
+outlier detection, 237, 266
+output gate, 516
+output layers, 289
+overcomplete autoencoders, 580, 580
+overfitting, 27
+avoiding through regularization, 364-371
+p (posterior) distribution, 272
+p (prior) distribution, 271
+p-value, 182
+parameter efficiency, 323
+parameter matrix, 148
+parameter servers, 705
+parameter space, 121
+parameter vector, 113
+parametric leaky ReLU (PReLU), 335
+parametric models, 181
+partial derivatives, 121
+pattern matching, 569
+PCA (Principal Component Analysis), 219
+anomaly and novelty detection, 274
+choosing dimension number, 223
+for compression, 224
+explained variance ratio, 222
+incremental, 225
+Kernel PCA (kPCA), 226-230
+preserving variance, 219
+principal component axis, 220
+projecting down to d dimensions, 221
+randomized, 225
+using Scikit-Learn, 222
+undercomplete linear autoencoders, 570
+Pearson's r, 58
+peephole connections, 518
+penalties, 14
+Perceptron, 284-288
+Perceptron convergence theorem, 287
+performance scheduling, 361
+piecewise constant scheduling, 361
+pipelines, 38, 424
+pixelwise normalization layers, 603
+policies, 14, 612
+policy gradients (PG), 613, 620-625
+policy parameters, 612
+policy search, 612
+policy space, 612
+polynomial features, 158
+polynomial kernels, 170
+Polynomial Regression, 112, 128
+pooling kernel, 457
+pooling layer, 456
+positional encodings, 556
+post-training quantization, 686
+power scheduling, 360
+pre-images, 228
+precision, 91-97
+prediction problems, 8, 17, 189
+creating on GCP AI, 677-681
+predictors, 65
+preprocessing, 251, 430-439
+pretraining, 481
+greedy layer-wise pretraining, 349
+models from Keras, 479
+on auxiliary tasks, 350
+reusing pretrained embeddings, 540
+reusing pretrained layers, 345-351
+unsupervised pretraining, 349
+using stacked autoencoders, 576-579
+primal problem, 168
+prioritized experience replay (PER), 640
+probabilistic autoencoders, 586
+probability density function (PDF), 236, 264
+projection, 215
+propositional logic, 280
+protocol buffers (protobufs), 425
+Proximal Policy Optimization (PPO), 663
+pruning, 182
+PyTorch library, 296
+Q-Learning, 630
+Approximate Q-Learning and Deep Q- Learning, 633
+exploration policy, 632
+implementing, 631
+Q-Value Iteration, 628
+Q-Values, 628
+Quadratic Programming (QP) problems, 167
+quantization-aware training, 687
+queries per second (QPS), 667
+queues, 384, 788
+Radial Basis Function (RBF), 159
+ragged tensors, 383, 784
+Rainbow agent, 642
+Random Forests, 197, 189
+Extra-Trees, 198
+feature importance, 198
+random initialization, 118
+random patches and random subspaces, 196
+random projections, 232
+randomized leaky ReLU (RReLU), 335
+Randomized PCA, 225
+recall, 91-97
+receiver operating characteristic (ROC) curve, 97
+recognition network, 569
+recommender systems, 237
+reconstruction error, 224
+reconstruction loss, 397, 570
+reconstruction pre-images, 228
+reconstructions, 570
+Rectified Linear Unit function (ReLU), 292-293
+recurrent autoencoders, 580
+recurrent neural networks (RNNs), 497
+bidirectional RNNs, 546
+forecasting time series, 503-511
+generating text using character RNNS, 526-534
+handling long sequences, 511-523
+recurrent neurons and layers, 498-502
+stateless and stateful, 525, 532
+training, 502
+recurrent neurons, 498
+Region Proposal Network (RPN), 492
+regression problems, 8
+Decision Trees, 183
+k-Nearest Neighbors regression, 22
+Lasso Regression, 137
+Linear Regression, 112-117
+Logistic Regression, 142-151
+multiple regression problems, 39
+multivariate regression problems, 39
+Polynomial Regression, 128
+regression MLPs, 292
+regression MLPs using Sequential API, 307
+Ridge Regression, 135
+Softmax Regression, 148-151
+SVM regression, 162
+univariate regression problems, 39
+regular expressions, 536
+regularization, 28
+avoiding overfitting through, 364-371
+hyperparameters for Decision Trees, 181
+multiple outputs, 311
+shrinkage technique, 205
+regularization terms, 135
+regularized linear models, 134
+Elastic Net, 140
+Lasso Regression, 137
+Ridge Regression, 135
+REINFORCE algorithms, 620
+Reinforcement Learning (RL), 14, 609
+Deep Q-Learning, 633-638
+evaluating actions, 619
+Markov Decision Processes (MDP), 625-629
+neural network policies, 617
+OpenAI Gym, 613-617
+optimizing rewards, 610
+policy gradients, 620-625
+policy search, 612
+Q-Learning, 630-634
+Temporal Difference Learning, 629
+TF-Agents library, 642-662
+ReLU (Rectified Linear Unit function), 292-293
+replay buffers, 635, 649, 654
+replay memory, 635
+representation learning, 68, 434
+residual blocks, 395
+residual errors, 203
+residual learning, 471
+residual units, 471
+ResNet (Residual Network), 471
+ResNet-34 CNN, 478
+responsibilities (clustering), 262
+restoring models, 314
+restricted Boltzmann machines (RBMs), 13, 349, 776
+reverse-mode autodiff, 290, 770
+rewards, 14
+Ridge Regression, 135
+RMSProp, 355
+Root Mean Square Error (RMSE), 39, 120
+root nodes, 176
+SAMME (Stagewise Additive Modeling using a Multiclass Exponential loss function), 203
+sample inefficiency, 625
+sampled softmax technique, 544
+sampling bias, 25
+sampling noise, 25
+SavedModel format, 669
+saving and restoring models, 314
+Scaled Dot-Product Attention layer, 559
+Scaled Exponential Linear Unit (SELU) function, 334, 337-338, 368
+AdaBoost version, 203
+anomaly and novelty detection, 274
+automatic reconstruction with, 229
+bagging and pasting, 194
+CART training algorithm, 177, 179
+clustering algorithms, 258
+computing classifier metrics, 92-107
+converting text to numbers, 66
+cross_val_score() function, 89
+dataset dictionary structure, 85
+DecisionTreeRegressor class, 183
+design principles, 64
+dimensionality reduction, 232
+ExtraTreesClassifier class, 198
+feature importance scoring, 198
+feature scaling, 154
+full SVD approach, 225
+GBRT ensemble training, 204
+GridSearchCV, 76
+incremental training, 207
+IncrementalPCA class, 226
+installing, 42
+K-fold cross-validation feature, 73
+KernelPCA class, 227
+linear model, 21
+linear regression, 116
+LLE (Locally Linear Embedding), 230, 232
+max_depth hyperparameter, 181
+mean_squared_error function, 72
+missing value handling, 63
+one-hot vectors, 67
+out-of-bag evaluation, 195
+PCAng, 222
+Perceptron class, 287
+presorting data with, 180
+Randomized PCA algorithm, 225
+random_state hyperparameter, 185
+saving models, 75
+SGDClassifier class, 88
+splitting datasets into subsets, 53
+stratified sampling, 54
+SVM classification classes, 162
+SVM models, 155
+tolerance hyperparameter, 162
+transformation sequences, 70
+transformers and, 68
+voting classifiers, 191
+Scikit-Optimize, 322
+SE block, 476
+SE-Inception, 476
+SE-ResNet, 476
+search engines, 238
+second-order partial derivatives (Hessians), 358
+self-attention mechanism, 556
+self-normalization, 337
+self-organizing maps (SOMs), 780
+self-supervised learning, 351
+semantic interpolation, 590
+semantic segmentation, 249, 458, 492
+semi-supervised learning, 13
+clustering algorithms, 237, 253
+SENet (Squeeze-and-Excitation Network), 476
+sensitivity, 91
+sentence encoders, 541
+sentiment analysis, 534, 526
+masking, 538
+reusing pretrained embeddings, 540
+separable convolution, 474
+sequence-to-sequence models, 510
+sequence-to-vector networks, 501
+SequenceExample protobuf (TensorFlow), 429
+sequences, 497
+forecasting time series, 503-511
+handling long, 511-523
+input and output, 501
+image classifiers, 297-307
+regression MLP, 307
+service account, 682
+sets, 383, 787
+Shannon's information theory, 180
+short-term memory problems, 514-523
+shortcut connections, 471
+shrinkage, 205
+shuffling-buffer approach, 417
+sigmoid (Logistic) activation function, 143, 293-294, 302, 332
+sigmoid kernel, 171
+silhouette coefficient, 246
+silhouette diagram, 247
+silhouette score, 246
+similarity functions, 159
+simulated annealing, 125
+simulated environments, 614
+single-shot learning, 495
+Singular Value Decomposition (SVD), 117, 221
+skewed datasets, 90
+skip connections, 337, 471
+Sklearn-Deap, 323
+slack variables, 167
+smoothing term, 340
+Soft Actor-Critic algorithm, 663
+soft clustering, 240
+soft margin classification, 154
+soft voting, 192
+softmax function, 148, 294, 299, 470, 482, 488, 543
+Softmax Regression, 148
+softplus activation function, 293
+spam filters, 1, 2
+spare replicas, 706
+sparse autoencoders, 582
+sparse matrix, 67
+sparse models, 359
+sparse tensors, 383, 785
+sparsity, 582
+sparsity loss, 583
+Spearmint library, 322
+spectral clustering, 259
+spurious patterns, 774
+stacked autoencoders, 572
+stacked denoising autoencoders, 581
+unsupervised pretraining, 576-579
+using Keras, 572
+visualizing Fashion MNIST Dataset, 574
+visualizing reconstructions, 574
+stacked denoising autoencoders, 581
+stacked generalization, 208
+stacking, 208
+stale gradients, 707
+standard correlation coefficient, 58
+standardization, 69
+start of sequence (SoS) token, 535
+state-action values, 628
+stateful metrics, 389
+stationary point, 761
+statistical mode, 193
+statistical significance, 182
+step function, 284
+Stochastic Gradient Boosting, 207
+Stochastic Gradient Descent (SGD), 88, 124
+stochastic neurons, 775
+stochastic policy, 612
+stratified sampling, 53
+streaming metrics, 389
+stride, 449
+string kernels, 161
+string subsequence kernel, 161
+string tensors, 383, 783
+strong learners, 190
+style mixing, 606
+style transfer, 604
+StyleGANs, 567, 604
+Subclassing API, 313
+subderivatives, 173
+subgradient vector, 140
+subsampling, 456
+subspace, 215
+summaries (TensorFlow), 317
+supervised learning, 8, 9
+Support Vector Machines (SVMs), 153
+decision function and prediction, 165
+dual problem, 168, 761
+kernelized SVM, 169
+linear SVM classification, 153
+nonlinear SVM classification, 157-162
+online SVMs, 172
+SVM regression, 162
+training objective, 166
+support vectors, 154
+symbolic differentiation, 768
+symbolic tensors, 408, 792
+symmetry, breaking in backpropagation, 291
+synchronous updates, 706
+t-Distributed Stochastic Neighbor Embedding (t-SNE), 233
+tail-heavy histograms, 51
+Talos library, 322
+target model, 639
+TD error, 630
+TD target, 630
+temperature, 775, 531
+Temporal Difference Learning (TD Learning), 629
+tensor arrays, 383, 786
+TensorBoard, 317
+TensorFlow Addons, 545
+TensorFlow cluster, 711
+TensorFlow Extended (TFX), 440
+TensorFlow Hub, 378, 540
+TensorFlow Lite, 378
+TensorFlow Model Optimization Toolkit (TF-MOT), 359
+TensorFlow Playground, 295
+TensorFlow, basics of architecture, 377
+benefits, xvi, 376
+community support, 379
+features, 376
+getting help, 379
+installing, 296
+library ecosystem, 378
+operating system compatibility, 378
+PyTorch library and, 296
+versions covered, 375
+convolution operations, 494
+convolutional layers, 453
+pooling layer, 458
+TensorFlow, custom models and training, 375
+activation functions, initializers, regularizers, and constraints, 387
+computing gradients using Autodiff, 399, 765-772
+implementing learning rate scheduling, 363
+layers, 391
+loss functions, 384
+losses and metrics, 397
+metrics, 388
+models, 394
+saving and loading, 385
+special data structures, 783-789
+training loops, 402
+TensorFlow, data loading and preprocessing, 413
+Data API, 414-424
+preprocessing input features, 430-439
+TensorFlow Datasets (TFDS) Project, 441, 441
+TF Transform, 439
+TFRecord format, 424-430
+TensorFlow, functions and graphs, 405
+AutoGraph and tracing, 407, 791-799
+TF Function rules, 409
+TensorFlow, model deployment at scale, 667
+deploying on AI platforms, 81
+deploying to mobile and embedded devices, 685-688
+serving TensorFlow models, 668-685
+training models across multiple devices, 701-717
+using GPUs to speed computations, 689-701
+tensors, 379
+Term-Frequency × Inverse-Document-Frequency (TF-IDF), 439
+terminal state, 626
+test sets, 30, 51
+testing and validation, 530
+data mismatch, 32
+hyperparameter tuning, 31
+model selection, 31
+text generation, 526
+chopping sequential datasets, 528
+generating Shakespearean text, 531
+splitting sequential datasets, 527
+stateful RNNs and, 532
+training dataset creation, 527
+TF Datasets (TFDS), 414, 441
+graphs generated by, 791-799
+rules, 409
+TF Transform (tf.Transform), 414, 439
+TF-Agents library, 642
+collect driver, 656
+datasets, 658
+deep Q-networks (DQNs), 650
+DQN agents, 652
+environment specifications, 644
+environment wrappers, 645
+environments, 643
+installing, 643
+replay buffer and observer, 654
+training architecture, 649
+training loops, 661
+training metrics, 655
+tf.keras, 295, 363, 363, 423
+tf.summary package, 319
+TF.Text library, 536
+TFRecord format, 424
+compressed TFRecord files, 425
+lists of lists using SequenceExample Proto‐buf, 429
+loading and parsing examples, 428
+protocol buffers (protobufs), 425
+TensorFlow protobufs, 427
+Theano, 295
+theoretical information criterion, 267
+thermal equilibrium, 775
+threshold logic unit (TLU), 284
+Tikhonov regularization, 135
+time series data, 503
+baseline metrics, 505
+deep RNNS, 506
+forecasting several steps ahead, 508
+simple RNNs, 505
+time step, 498
+tokenization, 536
+tolerance, 123
+TPUs (tensor processing units), 377
+train-dev sets, 32
+training data, 20
+hold outs, 31
+irrelevant features, 27
+nonrepresentative, 25
+overfitting, 27
+poor quality, 26
+training dataset creation, 527
+underfitting, 29
+training instances, 2, 215
+training models, 111
+example project, 72
+Gradient Descent, 118-128
+learning curves, 130-134
+Linear Regression, 112-117
+Logistic Regression, 142-151
+Polynomial Regression, 128-130
+regularized linear models, 134-142
+training samples, 2
+training set rotation, 185
+training sets, 2, 30, 213
+training/serving skew, 440
+trajectories, 649
+trajectory, 650
+transfer learning, 324, 345, 481
+transformations, 68, 64
+affine transformations, 604
+chaining, 415
+inverse transformation, 225
+transformation pipelines, 70
+Transformer architecture, 554
+transposed convolutional layer, 493
+true negative rate (TNR), 97
+true positive rate (TPR), 91
+truncated backpropagation through time, 529
+Turing test, 525
+tying weights, 577
+type conversions, 381
+uncertainty sampling, 255
+undercomplete autoencoders, 570
+underfitting, 29
+undiscounted rewards, 656
+univariate regression problems, 39
+univariate time series, 503
+unrolling the network through time, 498
+unstable gradients problem, 512
+unsupervised learning, 235
+algorithms covered, 10
+clustering, 236-260, 9
+common tasks, 10
+Gaussian mixtures model (GMM), 260-275
+pretraining using stacked autoencoders, 576-579
+unsupervised pretraining, 349
+upsampling layer, 493
+utility functions, 20
+validation sets, 31
+Value Iteration algorithm, 627
+vanishing/exploding gradients problems, 332-345
+variables, 382
+explained variance ratio, 222
+preserving, 219
+variational autoencoders, 586-591
+variational inference, 272
+variational parameters, 272
+vector-to-sequence networks, 501
+column vectors, 113
+feature vectors, 113
+momentum vector, 352
+parameter vectors, 113
+subgradient vectors, 140
+VGGNet, 470
+virtual GPU devices, 695
+visible units, 775
+visual attention, 552
+visualization algorithms, 11
+vocabulary, 432
+voice recognition, 445
+wall time, 341
+warmup phase, 708
+WaveNet, 498, 521
+weak learners, 190
+weighted moving average model, 506
+white box models, 178
+Wide & Deep neural networks, 308
+wisdom of the crowd, 189
+word embeddings, 434
+word tokenization, 536
+WordTrees, 490
+workspace creation, 42
+Xavier initialization, 333
+Xception (Extreme Inception), 474
+XGBoost, 208
+You Only Look Once (YOLO), 489
+zero padding, 449
+zero-shot learning (ZSL), 564
+ZF Net, 466
