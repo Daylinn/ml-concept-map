@@ -3,21 +3,25 @@ from typing import List, Dict, Tuple
 from collections import Counter
 from sklearn.feature_extraction.text import TfidfVectorizer
 import nltk
-
-# Ensure NLTK data is downloaded
-nltk.download('punkt')
-nltk.download('stopwords')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize, sent_tokenize
 
 # Create a class for Concept Extractor
 class ConceptExtractor: 
     def __init__(self):
-        # initializing the concept extractor 
-        try: 
-            nltk.data.find('stopwords')
-        except LookupError:
-            nltk.download('stopwords')
+        # Initialize NLTK resources properly
+        required_resources = ['punkt', 'stopwords', 'punkt_tab']
+        for resource in required_resources:
+            try:
+                if resource == 'punkt':
+                    nltk.data.find('tokenizers/punkt')
+                elif resource == 'stopwords':
+                    nltk.data.find('corpora/stopwords')
+                elif resource == 'punkt_tab':
+                    nltk.data.find('tokenizers/punkt_tab')
+            except LookupError:
+                print(f"Downloading {resource}...")
+                nltk.download(resource, quiet=True)
 
         self.stop_words = set(stopwords.words('english'))
 
@@ -57,10 +61,16 @@ class ConceptExtractor:
     
     # Extract frequently occurring phrases
     def extract_frequent_phrases(self, texts: List[str], top_n: int = 50) -> List[str]:
-        # Tokenize text into sentences
+        # Clean and tokenize text into sentences
         all_sentences = []
         for text in texts:
-            sentences = sent_tokenize(text.lower())
+            # Apply the same cleaning used in extract_concepts
+            cleaned_text = self.clean_text(text)
+            try:
+                sentences = sent_tokenize(cleaned_text)
+            except LookupError:
+                # Fallback to simple sentence splitting
+                sentences = [s.strip() for s in cleaned_text.split('.') if s.strip()]
             all_sentences.extend(sentences)
         
         # Find common phrases using bigrams
