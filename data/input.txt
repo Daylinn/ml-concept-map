@@ -1,0 +1,11 @@
+Machine learning is a field of study that gives computers the ability to learn without being explicitly programmed. Deep learning is part of a broader family of machine learning methods based on artificial neural networks. Supervised learning is the machine learning task of learning a function that maps an input to an output based on example input-output pairs.
+
+Neural networks are computing systems inspired by the biological neural networks that constitute animal brains. They consist of layers of interconnected nodes, called neurons, which process and transmit information. Each connection between neurons has an associated weight that is adjusted during training.
+
+Deep learning models use multiple layers of neural networks to progressively extract higher-level features from raw input. For example, in image processing, lower layers may identify edges, while higher layers may identify the concepts relevant to a human such as digits or letters or faces.
+
+Supervised learning algorithms build a mathematical model of a set of data that contains both the inputs and the desired outputs. The training data consists of a set of training examples. Each training example has one or more inputs and the desired output, also known as a supervisory signal.
+
+In the training process, the model makes predictions or decisions, and is corrected when those predictions are wrong. The training process continues until the model achieves the desired level of accuracy on the training data.
+
+The model can then be used to make predictions on new, unseen data. This is known as inference or prediction. The quality of these predictions depends on how well the model has learned the underlying patterns in the training data. 
