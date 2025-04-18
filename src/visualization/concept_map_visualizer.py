@@ -15,8 +15,8 @@ class ConceptMapVisualizer:
         
     def visualize_graph(self, 
                        G: nx.DiGraph,
-                       title: str = "Concept Map",
-                       figsize: tuple = (12, 8),
+                       title: str = "Data Magicians - Concept Map", # JB Update Title
+                       figsize: tuple = (12, 12), # JB Update figsize from 12x8 to 16x6
                        save_path: Optional[str] = None) -> None:
         """
         Visualize the concept map graph.
@@ -34,9 +34,10 @@ class ConceptMapVisualizer:
         
         # Draw nodes
         nx.draw_networkx_nodes(G, pos, 
-                             node_color='lightblue',
+                             node_color='#1976d2', # JB Update node color from 'lightblue'
                              node_size=2000,
-                             alpha=0.7)
+                             alpha=0.7
+                             )
         
         # Draw edges with different colors based on relationship type
         edge_colors = [self.colors.get(G[u][v]['relationship'], 'gray') 
@@ -87,7 +88,7 @@ class ConceptMapVisualizer:
         <!DOCTYPE html>
         <html>
         <head>
-            <title>Interactive Concept Map</title>
+            <title>Data Magicians - Interactive Concept Map</title>
             <script src="https://d3js.org/d3.v7.min.js"></script>
             <style>
                 body {{ margin: 0; overflow: hidden; }}

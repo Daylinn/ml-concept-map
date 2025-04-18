@@ -46,11 +46,11 @@ def main():
     chunks = split_into_chunks(text)
     
     # Extract concepts
-    concepts = concept_extractor.extract_all_concepts(chunks, top_n=50)
+    concepts = concept_extractor.extract_all_concepts(chunks, top_n=12)
     print(f"Extracted {len(concepts)} concepts")
     
     # Extract relationships
-    relationships = relationship_extractor.extract_relationships(chunks, concepts)
+    relationships = relationship_extractor.extract_relationships(chunks, concepts, limit=200)
     print(f"Extracted {len(relationships)} relationships")
     
     # Build concept graph
@@ -62,7 +62,7 @@ def main():
     
     # Static visualization
     visualizer.visualize_graph(G, 
-                             title="ML Concept Map",
+                             title="Data Magicians - Concept Map",
                              save_path=os.path.join(output_dir, "concept_map.png"))
     
     # Interactive visualization
