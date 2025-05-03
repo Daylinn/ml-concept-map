@@ -1,0 +1,92 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Data Magicians - Interactive Concept Map</title>
+            <script src="https://d3js.org/d3.v7.min.js"></script>
+            <style>
+                body { margin: 0; overflow: hidden; }
+                #graph { width: 100vw; height: 100vh; }
+                .node { cursor: pointer; }
+                .link { stroke: #999; stroke-opacity: 0.6; }
+                .label { font-size: 12px; }
+            </style>
+        </head>
+        <body>
+            <div id="graph"></div>
+            <script>
+                const data = {
+                    nodes: [{'id': 'Machine Learning', 'group': 1}, {'id': 'Deep Learning', 'group': 1}, {'id': 'Neural Networks', 'group': 1}, {'id': 'Supervised Learning', 'group': 1}, {'id': 'Input', 'group': 1}, {'id': 'Output', 'group': 1}],
+                    links: [{'source': 'Machine Learning', 'target': 'Deep Learning', 'type': 'is_a'}, {'source': 'Machine Learning', 'target': 'Supervised Learning', 'type': 'has_part'}, {'source': 'Deep Learning', 'target': 'Neural Networks', 'type': 'has_part'}, {'source': 'Supervised Learning', 'target': 'Input', 'type': 'used_for'}, {'source': 'Supervised Learning', 'target': 'Output', 'type': 'used_for'}]
+                };
+                
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                
+                const svg = d3.select("#graph")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+                
+                const simulation = d3.forceSimulation(data.nodes)
+                    .force("link", d3.forceLink(data.links).id(d => d.id).distance(100))
+                    .force("charge", d3.forceManyBody().strength(-300))
+                    .force("center", d3.forceCenter(width / 2, height / 2));
+                
+                const link = svg.append("g")
+                    .selectAll("line")
+                    .data(data.links)
+                    .join("line")
+                    .attr("class", "link");
+                
+                const node = svg.append("g")
+                    .selectAll("g")
+                    .data(data.nodes)
+                    .join("g")
+                    .attr("class", "node")
+                    .call(d3.drag()
+                        .on("start", dragstarted)
+                        .on("drag", dragged)
+                        .on("end", dragended));
+                
+                node.append("circle")
+                    .attr("r", 5)
+                    .style("fill", "#69b3a2");
+                
+                node.append("text")
+                    .attr("class", "label")
+                    .attr("dx", 12)
+                    .attr("dy", ".35em")
+                    .text(d => d.id);
+                
+                simulation.on("tick", () => {
+                    link
+                        .attr("x1", d => d.source.x)
+                        .attr("y1", d => d.source.y)
+                        .attr("x2", d => d.target.x)
+                        .attr("y2", d => d.target.y);
+                    
+                    node
+                        .attr("transform", d => `translate(${d.x}, ${d.y})`);
+                });
+                
+                function dragstarted(event) {
+                    if (!event.active) simulation.alphaTarget(0.3).restart();
+                    event.subject.fx = event.subject.x;
+                    event.subject.fy = event.subject.y;
+                }
+                
+                function dragged(event) {
+                    event.subject.fx = event.x;
+                    event.subject.fy = event.y;
+                }
+                
+                function dragended(event) {
+                    if (!event.active) simulation.alphaTarget(0);
+                    event.subject.fx = null;
+                    event.subject.fy = null;
+                }
+            </script>
+        </body>
+        </html>
+        

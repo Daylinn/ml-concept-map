@@ -119,21 +119,4 @@ class ConceptExtractor:
         
         return combined[:top_n]
 
-# Example usage
-if __name__ == "__main__":
-    # Sample texts
-    sample_texts = [
-        "Machine learning is a field of study that gives computers the ability to learn without being explicitly programmed.",
-        "Deep learning is part of a broader family of machine learning methods based on artificial neural networks.",
-        "Supervised learning is the machine learning task of learning a function that maps an input to an output based on example input-output pairs."
-    ]
-    
-    # Create extractor
-    extractor = ConceptExtractor()
-    
-    # Extract concepts
-    concepts = extractor.extract_all_concepts(sample_texts, top_n=10)
-    
-    print("Top 10 concepts:")
-    for i, concept in enumerate(concepts, 1):
-        print(f"{i}. {concept}")
+

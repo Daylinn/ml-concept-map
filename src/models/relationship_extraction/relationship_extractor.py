@@ -79,18 +79,6 @@ class RelationshipExtractor:
         """
         #)
     def extract_relationships(self, texts: List[str], concepts: List[str], limit: int = 100) -> List[Tuple[str, str, str]]:
-        """
-        Extract relationships between concepts using both pattern matching and co-occurrence analysis,
-        limited to a specified number of relationships with even distribution across patterns.
-        
-        Args:
-            texts: List of text segments to analyze
-            concepts: List of concepts to find relationships between
-            limit: Maximum number of relationships to return (default: 100)
-            
-        Returns:
-            List of tuples (concept1, relationship_type, concept2)
-        """
         # Extract all relationships first
         all_relationships = []
         relationships_by_type = defaultdict(list)
@@ -151,16 +139,6 @@ class RelationshipExtractor:
         return []
     
     def _limit_with_even_distribution(self, relationships_by_type: Dict[str, List[Tuple[str, str, str]]], limit: int) -> List[Tuple[str, str, str]]:
-        """
-        Limit relationships with even distribution across relationship types.
-        
-        Args:
-            relationships_by_type: Dictionary mapping relationship types to lists of relationships
-            limit: Maximum number of relationships to return
-            
-        Returns:
-            Limited list of relationships with even distribution
-        """
         result = []
         
         # Filter out empty relationship types
